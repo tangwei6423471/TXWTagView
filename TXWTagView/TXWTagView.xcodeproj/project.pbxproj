@@ -1,0 +1,491 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		BA0CE91B1B8C379C00E67777 /* TXWTagView.m in Sources */ = {isa = PBXBuildFile; fileRef = BA0CE91A1B8C379C00E67777 /* TXWTagView.m */; };
+		BA0CE91E1B8C380000E67777 /* TXWTagPopView.m in Sources */ = {isa = PBXBuildFile; fileRef = BA0CE91D1B8C380000E67777 /* TXWTagPopView.m */; };
+		BA3AE4931B8B0227007BAD59 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BA3AE4921B8B0227007BAD59 /* main.m */; };
+		BA3AE4961B8B0227007BAD59 /* TXWAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BA3AE4951B8B0227007BAD59 /* TXWAppDelegate.m */; };
+		BA3AE4991B8B0227007BAD59 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA3AE4981B8B0227007BAD59 /* ViewController.m */; };
+		BA3AE49C1B8B0227007BAD59 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA3AE49A1B8B0227007BAD59 /* Main.storyboard */; };
+		BA3AE49E1B8B0227007BAD59 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BA3AE49D1B8B0227007BAD59 /* Images.xcassets */; };
+		BA3AE4A11B8B0227007BAD59 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA3AE49F1B8B0227007BAD59 /* LaunchScreen.xib */; };
+		BA3AE4AD1B8B0227007BAD59 /* TXWTagViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BA3AE4AC1B8B0227007BAD59 /* TXWTagViewTests.m */; };
+		BA3AE4BD1B8B0285007BAD59 /* APAudioTagModel.m in Sources */ = {isa = PBXBuildFile; fileRef = BA3AE4BC1B8B0285007BAD59 /* APAudioTagModel.m */; };
+		BA3AE4C01B8B028D007BAD59 /* APImgModel.m in Sources */ = {isa = PBXBuildFile; fileRef = BA3AE4BF1B8B028D007BAD59 /* APImgModel.m */; };
+		BA3AE4C31B8B0295007BAD59 /* APLocationModel.m in Sources */ = {isa = PBXBuildFile; fileRef = BA3AE4C21B8B0295007BAD59 /* APLocationModel.m */; };
+		BA3AE4C61B8B029D007BAD59 /* TXWTextTagModel.m in Sources */ = {isa = PBXBuildFile; fileRef = BA3AE4C51B8B029D007BAD59 /* TXWTextTagModel.m */; };
+		BA3AE4D81B8B088A007BAD59 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA3AE4D71B8B088A007BAD59 /* CoreGraphics.framework */; };
+		BA3AE5001B8B0B1E007BAD59 /* APMakerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA3AE4FF1B8B0B1E007BAD59 /* APMakerViewController.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BA3AE4A71B8B0227007BAD59 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BA3AE4851B8B0227007BAD59 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BA3AE48C1B8B0227007BAD59;
+			remoteInfo = TXWTagView;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		BA0CE9191B8C379C00E67777 /* TXWTagView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TXWTagView.h; sourceTree = "<group>"; };
+		BA0CE91A1B8C379C00E67777 /* TXWTagView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TXWTagView.m; sourceTree = "<group>"; };
+		BA0CE91C1B8C380000E67777 /* TXWTagPopView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TXWTagPopView.h; sourceTree = "<group>"; };
+		BA0CE91D1B8C380000E67777 /* TXWTagPopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TXWTagPopView.m; sourceTree = "<group>"; };
+		BA3AE48D1B8B0227007BAD59 /* TXWTagView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TXWTagView.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA3AE4911B8B0227007BAD59 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BA3AE4921B8B0227007BAD59 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		BA3AE4941B8B0227007BAD59 /* TXWAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TXWAppDelegate.h; sourceTree = "<group>"; };
+		BA3AE4951B8B0227007BAD59 /* TXWAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TXWAppDelegate.m; sourceTree = "<group>"; };
+		BA3AE4971B8B0227007BAD59 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		BA3AE4981B8B0227007BAD59 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		BA3AE49B1B8B0227007BAD59 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		BA3AE49D1B8B0227007BAD59 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		BA3AE4A01B8B0227007BAD59 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		BA3AE4A61B8B0227007BAD59 /* TXWTagViewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TXWTagViewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA3AE4AB1B8B0227007BAD59 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BA3AE4AC1B8B0227007BAD59 /* TXWTagViewTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TXWTagViewTests.m; sourceTree = "<group>"; };
+		BA3AE4B61B8B025D007BAD59 /* APOpenTagView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APOpenTagView.h; sourceTree = "<group>"; };
+		BA3AE4B71B8B0263007BAD59 /* APMakerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = APMakerViewController.h; sourceTree = "<group>"; };
+		BA3AE4BB1B8B0285007BAD59 /* APAudioTagModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APAudioTagModel.h; sourceTree = "<group>"; };
+		BA3AE4BC1B8B0285007BAD59 /* APAudioTagModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APAudioTagModel.m; sourceTree = "<group>"; };
+		BA3AE4BE1B8B028D007BAD59 /* APImgModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APImgModel.h; sourceTree = "<group>"; };
+		BA3AE4BF1B8B028D007BAD59 /* APImgModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APImgModel.m; sourceTree = "<group>"; };
+		BA3AE4C11B8B0295007BAD59 /* APLocationModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APLocationModel.h; sourceTree = "<group>"; };
+		BA3AE4C21B8B0295007BAD59 /* APLocationModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APLocationModel.m; sourceTree = "<group>"; };
+		BA3AE4C41B8B029D007BAD59 /* TXWTextTagModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TXWTextTagModel.h; sourceTree = "<group>"; };
+		BA3AE4C51B8B029D007BAD59 /* TXWTextTagModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TXWTextTagModel.m; sourceTree = "<group>"; };
+		BA3AE4D71B8B088A007BAD59 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		BA3AE4FF1B8B0B1E007BAD59 /* APMakerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APMakerViewController.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BA3AE48A1B8B0227007BAD59 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA3AE4D81B8B088A007BAD59 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BA3AE4A31B8B0227007BAD59 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		BA3AE4841B8B0227007BAD59 = {
+			isa = PBXGroup;
+			children = (
+				BA3AE48F1B8B0227007BAD59 /* TXWTagView */,
+				BA3AE4A91B8B0227007BAD59 /* TXWTagViewTests */,
+				BA3AE4D91B8B0894007BAD59 /* Frameworks */,
+				BA3AE48E1B8B0227007BAD59 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		BA3AE48E1B8B0227007BAD59 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BA3AE48D1B8B0227007BAD59 /* TXWTagView.app */,
+				BA3AE4A61B8B0227007BAD59 /* TXWTagViewTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BA3AE48F1B8B0227007BAD59 /* TXWTagView */ = {
+			isa = PBXGroup;
+			children = (
+				BA3AE4941B8B0227007BAD59 /* TXWAppDelegate.h */,
+				BA3AE4951B8B0227007BAD59 /* TXWAppDelegate.m */,
+				BA3AE4971B8B0227007BAD59 /* ViewController.h */,
+				BA3AE4981B8B0227007BAD59 /* ViewController.m */,
+				BA3AE49A1B8B0227007BAD59 /* Main.storyboard */,
+				BA3AE4B61B8B025D007BAD59 /* APOpenTagView.h */,
+				BA3AE4B71B8B0263007BAD59 /* APMakerViewController.h */,
+				BA3AE4FF1B8B0B1E007BAD59 /* APMakerViewController.m */,
+				BA3AE4BB1B8B0285007BAD59 /* APAudioTagModel.h */,
+				BA3AE4BC1B8B0285007BAD59 /* APAudioTagModel.m */,
+				BA3AE4BE1B8B028D007BAD59 /* APImgModel.h */,
+				BA3AE4BF1B8B028D007BAD59 /* APImgModel.m */,
+				BA3AE4C11B8B0295007BAD59 /* APLocationModel.h */,
+				BA3AE4C21B8B0295007BAD59 /* APLocationModel.m */,
+				BA3AE4C41B8B029D007BAD59 /* TXWTextTagModel.h */,
+				BA3AE4C51B8B029D007BAD59 /* TXWTextTagModel.m */,
+				BA0CE9191B8C379C00E67777 /* TXWTagView.h */,
+				BA0CE91A1B8C379C00E67777 /* TXWTagView.m */,
+				BA0CE91C1B8C380000E67777 /* TXWTagPopView.h */,
+				BA0CE91D1B8C380000E67777 /* TXWTagPopView.m */,
+				BA3AE49D1B8B0227007BAD59 /* Images.xcassets */,
+				BA3AE49F1B8B0227007BAD59 /* LaunchScreen.xib */,
+				BA3AE4901B8B0227007BAD59 /* Supporting Files */,
+			);
+			path = TXWTagView;
+			sourceTree = "<group>";
+		};
+		BA3AE4901B8B0227007BAD59 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				BA3AE4911B8B0227007BAD59 /* Info.plist */,
+				BA3AE4921B8B0227007BAD59 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BA3AE4A91B8B0227007BAD59 /* TXWTagViewTests */ = {
+			isa = PBXGroup;
+			children = (
+				BA3AE4AC1B8B0227007BAD59 /* TXWTagViewTests.m */,
+				BA3AE4AA1B8B0227007BAD59 /* Supporting Files */,
+			);
+			path = TXWTagViewTests;
+			sourceTree = "<group>";
+		};
+		BA3AE4AA1B8B0227007BAD59 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				BA3AE4AB1B8B0227007BAD59 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BA3AE4D91B8B0894007BAD59 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BA3AE4D71B8B088A007BAD59 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BA3AE48C1B8B0227007BAD59 /* TXWTagView */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BA3AE4B01B8B0227007BAD59 /* Build configuration list for PBXNativeTarget "TXWTagView" */;
+			buildPhases = (
+				BA3AE4891B8B0227007BAD59 /* Sources */,
+				BA3AE48A1B8B0227007BAD59 /* Frameworks */,
+				BA3AE48B1B8B0227007BAD59 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TXWTagView;
+			productName = TXWTagView;
+			productReference = BA3AE48D1B8B0227007BAD59 /* TXWTagView.app */;
+			productType = "com.apple.product-type.application";
+		};
+		BA3AE4A51B8B0227007BAD59 /* TXWTagViewTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BA3AE4B31B8B0227007BAD59 /* Build configuration list for PBXNativeTarget "TXWTagViewTests" */;
+			buildPhases = (
+				BA3AE4A21B8B0227007BAD59 /* Sources */,
+				BA3AE4A31B8B0227007BAD59 /* Frameworks */,
+				BA3AE4A41B8B0227007BAD59 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BA3AE4A81B8B0227007BAD59 /* PBXTargetDependency */,
+			);
+			name = TXWTagViewTests;
+			productName = TXWTagViewTests;
+			productReference = BA3AE4A61B8B0227007BAD59 /* TXWTagViewTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BA3AE4851B8B0227007BAD59 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0640;
+				ORGANIZATIONNAME = develop;
+				TargetAttributes = {
+					BA3AE48C1B8B0227007BAD59 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+					BA3AE4A51B8B0227007BAD59 = {
+						CreatedOnToolsVersion = 6.4;
+						TestTargetID = BA3AE48C1B8B0227007BAD59;
+					};
+				};
+			};
+			buildConfigurationList = BA3AE4881B8B0227007BAD59 /* Build configuration list for PBXProject "TXWTagView" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = BA3AE4841B8B0227007BAD59;
+			productRefGroup = BA3AE48E1B8B0227007BAD59 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BA3AE48C1B8B0227007BAD59 /* TXWTagView */,
+				BA3AE4A51B8B0227007BAD59 /* TXWTagViewTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BA3AE48B1B8B0227007BAD59 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA3AE49C1B8B0227007BAD59 /* Main.storyboard in Resources */,
+				BA3AE4A11B8B0227007BAD59 /* LaunchScreen.xib in Resources */,
+				BA3AE49E1B8B0227007BAD59 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BA3AE4A41B8B0227007BAD59 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BA3AE4891B8B0227007BAD59 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA0CE91B1B8C379C00E67777 /* TXWTagView.m in Sources */,
+				BA0CE91E1B8C380000E67777 /* TXWTagPopView.m in Sources */,
+				BA3AE4C31B8B0295007BAD59 /* APLocationModel.m in Sources */,
+				BA3AE4991B8B0227007BAD59 /* ViewController.m in Sources */,
+				BA3AE4BD1B8B0285007BAD59 /* APAudioTagModel.m in Sources */,
+				BA3AE4961B8B0227007BAD59 /* TXWAppDelegate.m in Sources */,
+				BA3AE5001B8B0B1E007BAD59 /* APMakerViewController.m in Sources */,
+				BA3AE4C01B8B028D007BAD59 /* APImgModel.m in Sources */,
+				BA3AE4C61B8B029D007BAD59 /* TXWTextTagModel.m in Sources */,
+				BA3AE4931B8B0227007BAD59 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BA3AE4A21B8B0227007BAD59 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA3AE4AD1B8B0227007BAD59 /* TXWTagViewTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BA3AE4A81B8B0227007BAD59 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BA3AE48C1B8B0227007BAD59 /* TXWTagView */;
+			targetProxy = BA3AE4A71B8B0227007BAD59 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		BA3AE49A1B8B0227007BAD59 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BA3AE49B1B8B0227007BAD59 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		BA3AE49F1B8B0227007BAD59 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BA3AE4A01B8B0227007BAD59 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		BA3AE4AE1B8B0227007BAD59 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		BA3AE4AF1B8B0227007BAD59 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		BA3AE4B11B8B0227007BAD59 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = TXWTagView/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		BA3AE4B21B8B0227007BAD59 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = TXWTagView/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		BA3AE4B41B8B0227007BAD59 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = TXWTagViewTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TXWTagView.app/TXWTagView";
+			};
+			name = Debug;
+		};
+		BA3AE4B51B8B0227007BAD59 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = TXWTagViewTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TXWTagView.app/TXWTagView";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BA3AE4881B8B0227007BAD59 /* Build configuration list for PBXProject "TXWTagView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BA3AE4AE1B8B0227007BAD59 /* Debug */,
+				BA3AE4AF1B8B0227007BAD59 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BA3AE4B01B8B0227007BAD59 /* Build configuration list for PBXNativeTarget "TXWTagView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BA3AE4B11B8B0227007BAD59 /* Debug */,
+				BA3AE4B21B8B0227007BAD59 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BA3AE4B31B8B0227007BAD59 /* Build configuration list for PBXNativeTarget "TXWTagViewTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BA3AE4B41B8B0227007BAD59 /* Debug */,
+				BA3AE4B51B8B0227007BAD59 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BA3AE4851B8B0227007BAD59 /* Project object */;
+}
