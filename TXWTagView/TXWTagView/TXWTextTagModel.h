@@ -30,8 +30,10 @@
 
 @property (nonatomic, assign) NSInteger ID;
 
-@property (nonatomic, assign) NSInteger direction;
+@property (nonatomic, assign) NSInteger direction;// left0,right1
 
 @property (nonatomic, copy) NSString* text;
+
+@property (nonatomic,assign) NSInteger tagType;// 根据type显示icon
 
 @end

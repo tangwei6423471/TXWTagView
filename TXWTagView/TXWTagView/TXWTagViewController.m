@@ -1,21 +1,21 @@
 //
-//  ViewController.m
+//  TXWTagViewController.m
 //  TXWTagView
 //
-//  Created by develop on 15/8/24.
+//  Created by develop on 15/8/26.
 //  Copyright (c) 2015年 develop. All rights reserved.
 //
 
-#import "ViewController.h"
-#import "TXWTagPopView.h"
-#import "TXWTextTagModel.h"
+#import "TXWTagViewController.h"
 #import "TXWTagView.h"
+#import "TXWTagViewCell.h"
+#import "TXWTextTagModel.h"
+#import "TXWTagPopView.h"
 
 #define BUTTON_HEIGHT 60
 #define BUTTON_WIDTH 60
 #define MAX_TAG_COUNT 5
-@interface ViewController ()<UIGestureRecognizerDelegate,TXWTagPopViewDelegate,UIAlertViewDelegate>
-@property (weak, nonatomic) IBOutlet UIImageView *imageVIew;
+@interface TXWTagViewController ()<TXWTagViewDataSource,TXWTagViewDelegate,TXWTagPopViewDelegate,UIGestureRecognizerDelegate>
 @property (strong,nonatomic) TXWTagPopView *tagPopView;
 @property (assign,nonatomic) BOOL isShowTagPoint;// 点击那里显示点
 @property (strong,nonatomic) UIImageView *pointIV;
@@ -25,19 +25,18 @@
 @property (strong,nonatomic) TXWTagView *tagView;
 @end
 
-@implementation ViewController
+@implementation TXWTagViewController
 
-#pragma mark - cycle life
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.tagArrs = [NSMutableArray arrayWithCapacity:MAX_TAG_COUNT];
     self.isShowTagPoint = YES;
-    self.imageVIew.image = [UIImage imageNamed:@"demo"];
+    self.tagView.backgroundImageView.image = [UIImage imageNamed:@"demo"];
+    self.tagView.userInteractionEnabled = YES;
+    [self.view addSubview:self.tagView];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageTapAction:)];
     tap.delegate = self;
-    self.imageVIew.userInteractionEnabled = YES;
-    [self.imageVIew addGestureRecognizer:tap];
+    [self.tagView addGestureRecognizer:tap];
+    
     
 }
 
@@ -54,7 +53,7 @@
     UITouch *touch = [allTouchs anyObject];
     CGPoint point = [touch locationInView:touch.view];
     
-    if(!CGRectContainsPoint(self.imageVIew.frame, point)){return;}// 点不在区域内，return
+    if(!CGRectContainsPoint(self.tagView.frame, point)){return;}// 点不在区域内，return
     self.tagPoint = point;
     
     if (self.isShowTagPoint) {
@@ -64,7 +63,7 @@
         self.pointIV.hidden = NO;
         
     }else{
-    
+        
         self.pointIV.hidden = YES;
     }
     
@@ -73,7 +72,7 @@
 - (void)imageTapAction:(UITapGestureRecognizer *)tap
 {
     if (self.isShowTagPoint) {
-
+        
         [self showTagPopView];
     }else{
         [self dismissTagPopView];
@@ -82,15 +81,16 @@
 
 - (void)showTagPopView
 {
+    _tagPopView.hidden = NO;
     if (!_tagPopView) {
         CGRect frame;
         frame.size = CGSizeMake(320, 320);
-        frame.origin = CGPointMake(0,(self.imageVIew.bounds.size.height-320)/2);
-        self.tagPopView = [[TXWTagPopView alloc]initWithFrame:frame superView:self.imageVIew];
+        frame.origin = CGPointMake(0,(self.tagView.bounds.size.height-320)/2);
+        self.tagPopView = [[TXWTagPopView alloc]initWithFrame:frame superView:self.tagView];
     }
     _tagPopView.alpha = 1;
     _tagPopView.delegate = self;
-    [self.imageVIew addSubview:_tagPopView];
+    [self.tagView addSubview:_tagPopView];
     
     _tagPopView.locationButton.alpha = 0;
     [UIView animateWithDuration:0.25f animations:^{
@@ -107,8 +107,8 @@
         _tagPopView.textButton.frame = frame;
         _tagPopView.textButton.alpha = 1;
     }];
+    
     self.isShowTagPoint = !self.isShowTagPoint;
-
 }
 
 - (void)dismissTagPopView
@@ -131,15 +131,8 @@
         }];
         
     }
+    _tagPopView.hidden = YES;
     self.isShowTagPoint = !self.isShowTagPoint;
-
-}
-
-- (void)tagLabelShowWithModel:(id)model isEdit:(BOOL)isEdit
-{
-//    self.tagView = [[TXWTagView alloc]initWithModel:model frame:self.imageVIew.frame isEditState:YES];
-    NSLog(@"标签frame = %@,imageview = %@",NSStringFromCGRect(self.tagView.frame),NSStringFromCGRect(self.imageVIew.frame));
-    [self.imageVIew addSubview:self.tagView];
 }
 
 #pragma mark - TXWTagPopViewDelegate
@@ -152,7 +145,8 @@
     }
     //
     [self dismissTagPopView];
-    self.pointIV.hidden = YES;
+    self.tagView.isShowTagPoint = YES;
+    self.tagView.pointIV.hidden = YES;
 }
 
 - (void)didLocationTagViewClicked
@@ -164,7 +158,9 @@
     }
     //
     [self dismissTagPopView];
-    self.pointIV.hidden = YES;
+    self.tagView.isShowTagPoint = YES;
+    self.tagView.pointIV.hidden = YES;
+
 }
 
 #pragma mark - UIAlertViewDelegate
@@ -176,23 +172,92 @@
         UITextField *nameTF = [alertView textFieldAtIndex:0];
         TXWTextTagModel *tagModel = [TXWTextTagModel new];
         tagModel.text = [nameTF.text isEqualToString:@""]?@"":nameTF.text;
-        tagModel.posX = self.tagPoint.x/self.imageVIew.frame.size.width;
-        tagModel.posY = self.tagPoint.y/self.imageVIew.frame.size.height;
+        tagModel.posX = self.tagPoint.x/self.tagView.frame.size.width;
+        tagModel.posY = self.tagPoint.y/self.tagView.frame.size.height;
         tagModel.direction = 0;
         [self.tagArrs addObject:tagModel];
         
-        [self tagLabelShowWithModel:tagModel isEdit:YES];
+//        [self tagLabelShowWithModel:tagModel isEdit:YES];
     }
+}
+
+#pragma mark - TXWTagViewDataSource
+- (NSInteger)numberOftagViewCellsInTagView:(TXWTagView *)tagView
+{
+    return self.tagArrs.count;
+}
+
+- (UIView<TXWTagViewCellDelegate>*)tagView:(TXWTagView *)tagView tagViewCellAtIndex:(NSInteger)index
+{
+    TXWTextTagModel *tag = self.tagArrs[index];
+    
+    TXWTagViewCell *tagViewCell = [[TXWTagViewCell alloc] init];
+    tagViewCell.titleText = tag.text;
+    tagViewCell.tagViewCellDirection = tag.direction;
+    tagViewCell.centerPointPercentage = CGPointMake(self.tagView.frame.size.width*tag.posX, self.tagView.frame.size.height*tag.posY);
+    return tagViewCell;
+}
+
+#pragma mark - TXWTagView Delegate
+// cell 选中
+- (void)tagView:(TXWTagView *)tagView didTappedTagViewItem:(UIView<TXWTagViewCellDelegate> *)tagViewItem atIndex:(NSInteger)index
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"删除标签" message:@"你确定要删除标签吗？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    alert.tag = index;
+    [alert show];
+}
+
+//editMode
+- (void)tagView:(TXWTagView *)tagView tagViewItem:(UIView<TXWTagViewCellDelegate> *)tagViewItem didChangedDirection:(TXWTagViewCellDirection)tagViewCellDirection AtIndex:(NSInteger)index
+{
+    TXWTextTagModel *misc = self.tagArrs[index];
+    misc.direction = tagViewCellDirection;
+}
+
+// 长按
+- (void)tagView:(TXWTagView *)tagView didLongPressedTagViewCell:(UIView<TXWTagViewCellDelegate> *)tagViewCell atIndex:(NSInteger)index
+{
+    TXWTextTagModel *misc = self.tagArrs[index];
+    [tagViewCell reversetagViewCellDirection];
+    misc.direction = tagViewCell.tagViewCellDirection;
+}
+
+// 移动
+- (void)tagView:(TXWTagView *)tagView didMoveTagViewCell:(UIView<TXWTagViewCellDelegate> *)tagViewCell atIndex:(NSInteger)index toNewPositonPercentage:(CGPoint)pointPercentage
+{
+    TXWTextTagModel *misc = self.tagArrs[index];
+    misc.posX = pointPercentage.x/self.tagView.frame.size.width;
+    misc.posY = pointPercentage.y/self.tagView.frame.size.height;
+}
+
+// 添加
+- (void)tagView:(TXWTagView *)tagView addNewTagViewItemTappedAtPosition:(CGPoint)ponit
+{
+    if (self.tagArrs.count == MAX_TAG_COUNT) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"最多添加5个标签" delegate:nil cancelButtonTitle:@"取消" otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    
+//    self.selectedPoint = ponit;
+    
+    [self performSegueWithIdentifier:@"showInputTitleVC" sender:self];
+}
+
+
+#pragma mark - UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return YES;// 支持多手势
 }
 
 #pragma mark - setter
 - (UIImageView *)pointIV
 {
-
+    
     if (!_pointIV) {
         _pointIV = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"KK_Filter_hover"]];
         _pointIV.frame= CGRectMake(0, 0, 17, 17);
-        [_imageVIew addSubview:_pointIV];
+        [_tagView addSubview:_pointIV];
     }
     return _pointIV;
 }
@@ -207,10 +272,22 @@
     return _alertView;
 }
 
-#pragma mark - UIGestureRecognizerDelegate
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    return YES;// 支持多手势
+- (TXWTagView *)tagView
+{
+    if (!_tagView) {
+        _tagView = [[TXWTagView alloc]initWithFrame:CGRectMake(0, 0, 320, 320)];
+        _tagView.dataSource = self;
+        _tagView.delegate = self;
+    }
+    return _tagView;
 }
 
+- (NSMutableArray *)tagArrs
+{
+    if (!_tagArrs) {
+        _tagArrs = [NSMutableArray array];
+    }
+    return _tagArrs;
+}
 
 @end
