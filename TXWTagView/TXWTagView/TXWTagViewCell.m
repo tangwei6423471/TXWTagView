@@ -141,40 +141,6 @@ static const CGFloat ktagViewCellCornerSideEdge = 10.0f;
 }
 
 
-//- (void)setAdaptViewScale:(CGFloat)adaptViewScale
-//{
-////    _adaptViewScale = adaptViewScale;
-//    //更新了adaptScale,字体需要改变，背景拉伸图需要改变，约束需要改变
-//    self.titleLabel.font = [UIFont systemFontOfSize:[self getAdaptViewScaleConstant:11.0f]];
-//    self.leftBgImage = nil;
-//    self.rightBgImage = nil;
-//    self.cachedTagSize = CGSizeZero;
-//}
-//
-//- (CGFloat)getAdaptViewScaleConstant:(CGFloat)originalConstant
-//{
-//    return self.adaptViewScale * originalConstant;
-//}
-
-//- (void)configAdjustAnchorPoint
-//{
-//    CGPoint anchorPoint = CGPointZero;
-//    if (self.tagModel.direction == TXWTagViewCellDirectionLeft) {
-//        if ([TXWTagViewHelper osVersionIsiOS8]) {
-//            anchorPoint = CGPointMake(13 / self.tagWidth, 4 / self.tagHeight);
-//        } else {
-//            anchorPoint = CGPointMake(13.0f / self.tagWidth, 4.0 / self.tagHeight);
-//        }
-//    } else {
-//        if ([TXWTagViewHelper osVersionIsiOS8]) {
-//            anchorPoint = CGPointMake((self.tagWidth - 8) / self.tagWidth, 4 / self.tagHeight);
-//        } else {
-//            anchorPoint = CGPointMake((self.tagWidth - 8.0f) / self.tagWidth, 4.0f / self.tagHeight);
-//        }
-//    }
-//    self.layer.anchorPoint = anchorPoint;
-//}
-
 - (void)adjustViewFrameWithGivenPositionPercentage:(CGPoint)pointPercentage andContainerSize:(CGSize)size
 {
     self.frame = CGRectMake(0, 0, self.tagWidth, self.tagHeight);
@@ -228,12 +194,12 @@ static const CGFloat ktagViewCellCornerSideEdge = 10.0f;
 - (BOOL)checkCanReversetagViewCellDirectionWithContainerSize:(CGSize)size
 {
     if (self.tagModel.direction == TXWTagViewCellDirectionRight) {
-        if (self.frame.origin.x <= self.tagWidth) {
+        if (self.frame.origin.x < self.tagWidth-TAG_TYPE_WIDTH/2) {
             return NO;
         }
         return YES;
     } else {
-        if (size.width - self.frame.origin.x - self.tagWidth <= self.tagWidth) {
+        if (size.width - self.frame.origin.x - self.tagWidth < self.tagWidth-TAG_TYPE_WIDTH/2) {
             return NO;
         }
         return YES;
@@ -301,8 +267,8 @@ static const CGFloat ktagViewCellCornerSideEdge = 10.0f;
         TagBgImageViewframe = CGRectMake(TAG_TYPE_WIDTH, 0, self.tagWidth-TAG_TYPE_WIDTH, TAG_BG_HEIGHT);
         TagLabelframe.origin.x = TAGLABEL_RIGHT_X;
         TagLabelframe.size.width = self.tagWidth-TAG_TYPE_WIDTH-TAG_ARROW_WIDTH-TAGBG_LABEL_PAD;
-        self.tagIV.image = [self.rightBgImage resizableImageWithCapInsets:UIEdgeInsetsMake(4, 5, 4, 12) resizingMode:UIImageResizingModeStretch];
-        TagTypeImageViewframe.origin = CGPointMake(self.tagWidth-TAG_TYPE_WIDTH, (TAG_BG_HEIGHT-TAG_TYPE_WIDTH)/2);
+        self.tagIV.image = [self.rightBgImage resizableImageWithCapInsets:UIEdgeInsetsMake(4, 12, 4, 5) resizingMode:UIImageResizingModeStretch];
+        TagTypeImageViewframe.origin = CGPointMake(0, (TAG_BG_HEIGHT-TAG_TYPE_WIDTH)/2);
 
     }
     

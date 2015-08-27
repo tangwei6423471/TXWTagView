@@ -201,14 +201,24 @@
 
 - (void)tagViewCellDidDraged:(UIGestureRecognizer *)gestureRecognizer
 {
+    
     UIView<TXWTagViewCellDelegate> *tagViewCell = (UIView<TXWTagViewCellDelegate> *)gestureRecognizer.view;
     CGPoint centerPoint = [gestureRecognizer locationInView:self.tagsContainer];
+    CGFloat offsetX = 30;
+    CGFloat offsetY = 5;
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        CGRect tagViewCellFrame = tagViewCell.frame;// 计算偏移量
+        offsetX = tagViewCellFrame.origin.x - centerPoint.x;
+        offsetY = tagViewCellFrame.origin.y - centerPoint.y;
+    }
+    
     CGRect containerBounds = self.tagsContainer.bounds;
     
     void (^reportDelegateSavePosition)() = ^ {
         if ([self.delegate respondsToSelector:@selector(tagView:didMovetagViewCell:atIndex:toNewPositonPercentage:)]) {
+            
             CGPoint itemPosition = tagViewCell.layer.position;
-            CGPoint centerPointPercentage = CGPointMake(itemPosition.x / self.bounds.size.width, itemPosition.y / self.bounds.size.height);
+            CGPoint centerPointPercentage = CGPointMake((itemPosition.x) / self.bounds.size.width, (itemPosition.y ) / self.bounds.size.height);
             [self.delegate tagView:self didMovetagViewCell:tagViewCell atIndex:tagViewCell.containerCountIndex toNewPositonPercentage:centerPointPercentage];
         }
     };
@@ -246,7 +256,7 @@
             reportDelegateSavePosition();
             return;
         }
-        [tagViewCell setCenter:CGPointMake(centerPoint.x, centerPoint.y)];
+        [tagViewCell setCenter:CGPointMake(centerPoint.x+offsetX, centerPoint.y)];
     } else {
         centerPoint.x += tagViewCell.bounds.size.width / 2;
         if (centerPoint.x - tagViewLeftWidth < containerBounds.origin.x || centerPoint.x + tagViewRightWidth > containerBounds.origin.x + containerBounds.size.width) {
@@ -262,7 +272,7 @@
             reportDelegateSavePosition();
             return;
         }
-        [tagViewCell setCenter:CGPointMake(centerPoint.x, centerPoint.y)];
+        [tagViewCell setCenter:CGPointMake(centerPoint.x-offsetX, centerPoint.y)];
     }
     
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
@@ -271,6 +281,7 @@
     
     [tagViewCell setNeedsLayout];
     [tagViewCell setNeedsUpdateConstraints];
+
 }
 
 #pragma mark - UIGestureRecognize Delegate Methods

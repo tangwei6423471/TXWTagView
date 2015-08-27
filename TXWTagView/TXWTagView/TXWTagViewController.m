@@ -214,10 +214,12 @@
 // cell 选中
 - (void)tagView:(TXWTagView *)tagView didTappedtagViewCell:(UIView<TXWTagViewCellDelegate> *)tagViewCell atIndex:(NSInteger)index
 {
-    
-    TXWTextTagModel *misc = self.tagArrs[index];
-    [tagViewCell reversetagViewCellDirection];
-    misc.direction = tagViewCell.tagViewCellDirection;
+    if ([tagViewCell checkCanReversetagViewCellDirectionWithContainerSize:self.tagView.frame.size]) {
+        TXWTextTagModel *misc = self.tagArrs[index];
+        [tagViewCell reversetagViewCellDirection];
+        misc.direction = tagViewCell.tagViewCellDirection;
+    }
+   
 }
 
 //editMode
