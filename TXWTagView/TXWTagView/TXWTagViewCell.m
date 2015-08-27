@@ -304,7 +304,6 @@ static const CGFloat ktagViewCellCornerSideEdge = 10.0f;
         self.tagIV.image = [self.rightBgImage resizableImageWithCapInsets:UIEdgeInsetsMake(4, 5, 4, 12) resizingMode:UIImageResizingModeStretch];
         TagTypeImageViewframe.origin = CGPointMake(self.tagWidth-TAG_TYPE_WIDTH, (TAG_BG_HEIGHT-TAG_TYPE_WIDTH)/2);
 
-        
     }
     
     self.tagIV.frame = TagBgImageViewframe;
