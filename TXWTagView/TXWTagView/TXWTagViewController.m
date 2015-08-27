@@ -172,11 +172,11 @@
         UITextField *nameTF = [alertView textFieldAtIndex:0];
         TXWTextTagModel *tagModel = [TXWTextTagModel new];
         tagModel.text = [nameTF.text isEqualToString:@""]?@"":nameTF.text;
-        tagModel.posX = self.tagPoint.x/self.tagView.frame.size.width;
-        tagModel.posY = self.tagPoint.y/self.tagView.frame.size.height;
-        tagModel.direction = 0;
+        tagModel.posX = self.tagView.tagPoint.x/self.tagView.frame.size.width;
+        tagModel.posY = self.tagView.tagPoint.y/self.tagView.frame.size.height;
+        tagModel.direction = 1;
         [self.tagArrs addObject:tagModel];
-        
+        [self.tagView reloadData];
 //        [self tagLabelShowWithModel:tagModel isEdit:YES];
     }
 }
@@ -192,15 +192,17 @@
     TXWTextTagModel *tag = self.tagArrs[index];
     
     TXWTagViewCell *tagViewCell = [[TXWTagViewCell alloc] init];
-    tagViewCell.titleText = tag.text;
-    tagViewCell.tagViewCellDirection = tag.direction;
-    tagViewCell.centerPointPercentage = CGPointMake(self.tagView.frame.size.width*tag.posX, self.tagView.frame.size.height*tag.posY);
+    tagViewCell.tagModel = tag;
+    tagViewCell.tagViewFrame = self.tagView.frame;
+//    tagViewCell.titleText = tag.text;
+//    tagViewCell.tagViewCellDirection = tag.direction;
+//    tagViewCell.centerPointPercentage = CGPointMake(self.tagView.frame.size.width*tag.posX, self.tagView.frame.size.height*tag.posY);
     return tagViewCell;
 }
 
 #pragma mark - TXWTagView Delegate
 // cell 选中
-- (void)tagView:(TXWTagView *)tagView didTappedTagViewItem:(UIView<TXWTagViewCellDelegate> *)tagViewItem atIndex:(NSInteger)index
+- (void)tagView:(TXWTagView *)tagView didTappedTagViewCell:(UIView<TXWTagViewCellDelegate> *)tagViewCell atIndex:(NSInteger)index
 {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"删除标签" message:@"你确定要删除标签吗？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
     alert.tag = index;
@@ -208,7 +210,7 @@
 }
 
 //editMode
-- (void)tagView:(TXWTagView *)tagView tagViewItem:(UIView<TXWTagViewCellDelegate> *)tagViewItem didChangedDirection:(TXWTagViewCellDirection)tagViewCellDirection AtIndex:(NSInteger)index
+- (void)tagView:(TXWTagView *)tagView tagViewCell:(UIView<TXWTagViewCellDelegate> *)tagViewCell didChangedDirection:(TXWTagViewCellDirection)tagViewCellDirection AtIndex:(NSInteger)index
 {
     TXWTextTagModel *misc = self.tagArrs[index];
     misc.direction = tagViewCellDirection;
@@ -231,7 +233,7 @@
 }
 
 // 添加
-- (void)tagView:(TXWTagView *)tagView addNewTagViewItemTappedAtPosition:(CGPoint)ponit
+- (void)tagView:(TXWTagView *)tagView addNewTagViewCellTappedAtPosition:(CGPoint)ponit
 {
     if (self.tagArrs.count == MAX_TAG_COUNT) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"最多添加5个标签" delegate:nil cancelButtonTitle:@"取消" otherButtonTitles:nil];

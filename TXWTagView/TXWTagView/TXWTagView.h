@@ -102,6 +102,7 @@ typedef NS_ENUM(NSInteger, TXWTagViewCellDirection) {
 @property (assign, nonatomic) IBInspectable NSInteger viewMode;
 @property (assign,nonatomic) BOOL isShowTagPoint;// 点击那里显示点
 @property (strong,nonatomic) UIImageView *pointIV;// 点击标示的点图
+@property (assign,nonatomic) CGPoint tagPoint;// tag位置
 @property (weak, nonatomic)  id<TXWTagViewDataSource> dataSource;
 @property (weak, nonatomic)  id<TXWTagViewDelegate> delegate;
 

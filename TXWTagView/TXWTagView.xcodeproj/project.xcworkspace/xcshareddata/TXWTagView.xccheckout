@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>6205D018-1EC9-47C4-BC4E-53AAC6FC1E4B</string>
+	<key>IDESourceControlProjectName</key>
+	<string>TXWTagView</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>BAC90F47BDF0FC1018D5ED4F10727810F51D0D3B</key>
+		<string>https://github.com/tangwei6423471/TXWTagView.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>TXWTagView/TXWTagView.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>BAC90F47BDF0FC1018D5ED4F10727810F51D0D3B</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/tangwei6423471/TXWTagView.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>BAC90F47BDF0FC1018D5ED4F10727810F51D0D3B</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>BAC90F47BDF0FC1018D5ED4F10727810F51D0D3B</string>
+			<key>IDESourceControlWCCName</key>
+			<string>TXWTagView</string>
+		</dict>
+	</array>
+</dict>
+</plist>
