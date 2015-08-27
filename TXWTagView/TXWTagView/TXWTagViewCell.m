@@ -75,10 +75,9 @@ static const CGFloat ktagViewCellCornerSideEdge = 10.0f;
 - (CGSize)cachedTagSize
 {
     if (CGSizeEqualToSize(_cachedTagSize, CGSizeZero)) {
-        CGFloat imageWidth = 28;
-        CGFloat deltaSpace = ktagViewCellCornerSideEdge + ktagViewCellSideEdge;
-        CGSize titleSize = [self.tagModel.text sizeWithAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:13]}];
-        _cachedTagSize = CGSizeMake(imageWidth + deltaSpace + titleSize.width, imageWidth);
+
+        _cachedTagSize = CGSizeMake([self widthByStr:self.tagModel.text]+TAG_ARROW_WIDTH+TAGBG_LABEL_PAD+TAG_TYPE_WIDTH, TAG_BG_HEIGHT);
+        
     }
     return _cachedTagSize;
 }
@@ -87,7 +86,7 @@ static const CGFloat ktagViewCellCornerSideEdge = 10.0f;
 - (UILabel *)tagLabel
 {
     if (!_tagLabel) {
-        _tagLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 3, 20, 20)];
+        _tagLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 3, 20, 20)];
         _tagLabel.font = [UIFont systemFontOfSize:13];
         _tagLabel.textColor = [UIColor whiteColor];
         _tagLabel.textAlignment = 1;
@@ -202,10 +201,12 @@ static const CGFloat ktagViewCellCornerSideEdge = 10.0f;
     self.layer.position = exactPoint;
 }
 
+
+// 改变方向
 - (void)reversetagViewCellDirection
 {
     CGPoint currentCenter = self.center;
-    CGFloat offsetLength = self.tagWidth - 21.0f;
+    CGFloat offsetLength = self.tagWidth - 11.0f;// 类型图片宽度
     CGPoint newCenter = currentCenter;
     if (self.tagModel.direction == TXWTagViewCellDirectionLeft) {
         self.tagViewCellDirection = TXWTagViewCellDirectionRight;
@@ -219,22 +220,20 @@ static const CGFloat ktagViewCellCornerSideEdge = 10.0f;
     if (![TXWTagViewHelper osVersionIsiOS8]) {
         self.frame = CGRectMake(0, 0, self.tagWidth, self.tagHeight);
     }
-    
-//    [self configAdjustAnchorPoint];
+
     [self setCenter:newCenter];
-    
     [self setNeedsLayout];
 }
 
 - (BOOL)checkCanReversetagViewCellDirectionWithContainerSize:(CGSize)size
 {
-    if (self.tagModel.direction == TXWTagViewCellDirectionLeft) {
-        if (self.frame.origin.x <= self.tagWidth / 2) {
+    if (self.tagModel.direction == TXWTagViewCellDirectionRight) {
+        if (self.frame.origin.x <= self.tagWidth) {
             return NO;
         }
         return YES;
     } else {
-        if (size.width - self.frame.origin.x - self.tagWidth <= self.tagWidth / 2) {
+        if (size.width - self.frame.origin.x - self.tagWidth <= self.tagWidth) {
             return NO;
         }
         return YES;
@@ -281,75 +280,40 @@ static const CGFloat ktagViewCellCornerSideEdge = 10.0f;
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+
+    self.tagLabel.text = self.tagModel.text;
+    CGRect TagBgImageViewframe = self.tagIV.frame;
+    CGRect TagTypeImageViewframe = self.tagTypeIV.frame;
+    CGRect TagLabelframe = self.tagLabel.frame;
     
-    // cell frame
-    CGRect cellFrame;
-    
-    // 类型icon
-    CGPoint point = CGPointMake(self.tagViewFrame.size.width*self.tagModel.posX, self.tagViewFrame.size.height*self.tagModel.posY);
     self.tagTypeIV.image = [UIImage imageNamed:@"big_biaoqian_dian"];
-    CGRect frame1 = self.tagTypeIV.frame;
-    
-    // 方向
-    CGRect frame2 = self.tagIV.frame;
-    CGRect frameLabel = self.tagLabel.frame;
     
     if (self.tagModel.direction == TXWTagViewCellDirectionLeft) {
-        
-        UIEdgeInsets insets = UIEdgeInsetsMake(4, 5, 4, 12);
-        CGFloat textWidth = [self widthByStr:self.tagModel.text]+TAG_ARROW_WIDTH+TAGBG_LABEL_PAD;
-        CGFloat residueWidth = point.x-TYPEICON_TAGBG;
-        
-        if (textWidth>=residueWidth) {
-            frame2.size.width = residueWidth;
-            frame2.origin = CGPointMake(0, 0);
-            cellFrame.origin = CGPointMake(0, point.y-TAG_BG_HEIGHT/2);
-            frameLabel.size.width = residueWidth - TAG_ARROW_WIDTH - TAGBG_LABEL_PAD;
-        }else{
-            frame2.size.width = textWidth;
-            frame2.origin = CGPointMake(0, 0);
-            cellFrame.origin = CGPointMake(point.x-textWidth-TYPEICON_TAGBG, point.y-TAG_BG_HEIGHT/2);
-            frameLabel.size.width = textWidth - TAG_ARROW_WIDTH - TAGBG_LABEL_PAD;
-        }
-        frameLabel.origin.x = TAGLABEL_LEFT_X;
-        UIImage *imageStretch = [self.leftBgImage resizableImageWithCapInsets:insets resizingMode:UIImageResizingModeStretch];
-        self.tagIV.image = imageStretch;
-        
-        // typeIcon
-        frame1.origin = CGPointMake(frame2.size.width, (TAG_BG_HEIGHT-TAG_TYPE_WIDTH)/2);
 
-    } else {
+        TagBgImageViewframe = CGRectMake(0, 0, self.tagWidth-TAG_TYPE_WIDTH, TAG_BG_HEIGHT);
+        TagLabelframe.origin.x = TAGLABEL_LEFT_X;
+        TagLabelframe.size.width = self.tagWidth-TAG_TYPE_WIDTH-TAG_ARROW_WIDTH-TAGBG_LABEL_PAD;
+        self.tagIV.image = [self.leftBgImage resizableImageWithCapInsets:UIEdgeInsetsMake(4, 5, 4, 12) resizingMode:UIImageResizingModeStretch];
+        TagTypeImageViewframe.origin = CGPointMake(self.tagWidth-TAG_TYPE_WIDTH, (TAG_BG_HEIGHT-TAG_TYPE_WIDTH)/2);
         
-        // typeIcon
-        frame1.origin = CGPointMake(0, (TAG_BG_HEIGHT-TAG_TYPE_WIDTH)/2);
+    }else{
         
-        UIEdgeInsets insets = UIEdgeInsetsMake(4, 12, 4, 5);
-        frame2.origin = CGPointMake(TAG_TYPE_WIDTH, 0);
-        // cell frame
-        cellFrame.origin = CGPointMake(point.x-self.tagTypeIV.frame.size.width/2, point.y-TAG_BG_HEIGHT/2);
-        CGFloat textWidth = [self widthByStr:self.tagModel.text]+TAG_ARROW_WIDTH+TAGBG_LABEL_PAD;
-        CGFloat residueWidth = CGRectGetMaxX(self.tagViewFrame)-point.x-TYPEICON_TAGBG;
-        if (textWidth>=residueWidth) {
-            frame2.size.width = residueWidth;
-            frameLabel.size.width = residueWidth - TAG_ARROW_WIDTH - TAGBG_LABEL_PAD;
-        }else{
-            frame2.size.width = textWidth;
-            frameLabel.size.width = textWidth - TAG_ARROW_WIDTH - TAGBG_LABEL_PAD;
-        }
-        frameLabel.origin.x = TAGLABEL_RIGHT_X;
-        self.tagIV.image = [self.rightBgImage resizableImageWithCapInsets:insets resizingMode:UIImageResizingModeStretch];
+        TagBgImageViewframe = CGRectMake(TAG_TYPE_WIDTH, 0, self.tagWidth-TAG_TYPE_WIDTH, TAG_BG_HEIGHT);
+        TagLabelframe.origin.x = TAGLABEL_RIGHT_X;
+        TagLabelframe.size.width = self.tagWidth-TAG_TYPE_WIDTH-TAG_ARROW_WIDTH-TAGBG_LABEL_PAD;
+        self.tagIV.image = [self.rightBgImage resizableImageWithCapInsets:UIEdgeInsetsMake(4, 5, 4, 12) resizingMode:UIImageResizingModeStretch];
+        TagTypeImageViewframe.origin = CGPointMake(self.tagWidth-TAG_TYPE_WIDTH, (TAG_BG_HEIGHT-TAG_TYPE_WIDTH)/2);
+
         
     }
     
-    self.tagIV.frame = frame2;
-    self.tagLabel.frame = frameLabel;
-    self.tagTypeIV.frame = frame1;
+    self.tagIV.frame = TagBgImageViewframe;
+    self.tagLabel.frame = TagLabelframe;
+    self.tagTypeIV.frame = TagTypeImageViewframe;
+
     
-    // label
-    self.tagLabel.text = self.tagModel.text;
-    
-    cellFrame.size = CGSizeMake(frame2.size.width+TAG_TYPE_WIDTH, TAG_BG_HEIGHT);
-    self.frame = cellFrame;
+//    cellFrame.size = CGSizeMake(frame2.size.width+TAG_TYPE_WIDTH, TAG_BG_HEIGHT);
+
 
 }
 
@@ -374,7 +338,7 @@ static const CGFloat ktagViewCellCornerSideEdge = 10.0f;
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
-    CGRect frame = CGRectInset(self.bounds, -20, -20);
+    CGRect frame = CGRectInset(self.bounds, -2, -2);
     return CGRectContainsPoint(frame, point) ? self : nil;
 }
 

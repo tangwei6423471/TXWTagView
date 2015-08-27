@@ -205,8 +205,8 @@
     tagViewCell.tagModel = tag;
     tagViewCell.tagViewFrame = self.tagView.frame;
 //    tagViewCell.titleText = tag.text;
-//    tagViewCell.tagViewCellDirection = tag.direction;
-//    tagViewCell.centerPointPercentage = CGPointMake(self.tagView.frame.size.width*tag.posX, self.tagView.frame.size.height*tag.posY);
+    tagViewCell.tagViewCellDirection = tag.direction;
+    tagViewCell.centerPointPercentage = CGPointMake(tag.posX, tag.posY);
     return tagViewCell;
 }
 
