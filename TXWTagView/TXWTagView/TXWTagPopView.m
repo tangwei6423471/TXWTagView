@@ -32,6 +32,33 @@
 
     [self addSubview:self.textButton];
     [self addSubview:self.locationButton];
+//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapPopViewAction:)];
+//    [self addGestureRecognizer:tap];
+}
+
+#pragma mark - UITapGestureRecognizer
+- (void)tapPopViewAction:(UIGestureRecognizer *)tap
+{
+    if (self) {
+        self.locationButton.alpha = 1;
+        [UIView animateWithDuration:0.10f animations:^{
+            CGRect frame = self.locationButton.frame;
+            frame.origin.y = 0;
+            self.locationButton.frame = frame;
+            self.locationButton.alpha = 0;
+        }];
+        
+        self.textButton.alpha = 1;
+        [UIView animateWithDuration:0.25f animations:^{
+            CGRect frame = self.textButton.frame;
+            frame.origin.y = 0;
+            self.textButton.frame = frame;
+            self.textButton.alpha = 0;
+        }];
+        
+    }
+
+    self.hidden = YES;
 
 }
 

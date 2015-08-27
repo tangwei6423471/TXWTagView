@@ -35,7 +35,7 @@
     [self.view addSubview:self.tagView];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageTapAction:)];
     tap.delegate = self;
-    [self.tagView addGestureRecognizer:tap];
+//    [self.tagView addGestureRecognizer:tap];
     
     
 }
@@ -166,18 +166,28 @@
 #pragma mark - UIAlertViewDelegate
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    if (0 == buttonIndex) {
+    if (alertView.tag == 999) {
+        if (0 == buttonIndex) {
+            [alertView isHidden];
+        }else{
+            UITextField *nameTF = [alertView textFieldAtIndex:0];
+            TXWTextTagModel *tagModel = [TXWTextTagModel new];
+            tagModel.text = [nameTF.text isEqualToString:@""]?@"":nameTF.text;
+            tagModel.posX = self.tagView.tagPoint.x/self.tagView.frame.size.width;
+            tagModel.posY = self.tagView.tagPoint.y/self.tagView.frame.size.height;
+            tagModel.direction = 0;
+            [self.tagArrs addObject:tagModel];
+            [self.tagView reloadData];
+        }
+    }else if (alertView.tag == 1000){
         [alertView isHidden];
     }else{
-        UITextField *nameTF = [alertView textFieldAtIndex:0];
-        TXWTextTagModel *tagModel = [TXWTextTagModel new];
-        tagModel.text = [nameTF.text isEqualToString:@""]?@"":nameTF.text;
-        tagModel.posX = self.tagView.tagPoint.x/self.tagView.frame.size.width;
-        tagModel.posY = self.tagView.tagPoint.y/self.tagView.frame.size.height;
-        tagModel.direction = 1;
-        [self.tagArrs addObject:tagModel];
-        [self.tagView reloadData];
-//        [self tagLabelShowWithModel:tagModel isEdit:YES];
+        if (0 == buttonIndex) {
+            [alertView isHidden];
+        }else{
+            [self.tagArrs removeObjectAtIndex:alertView.tag];
+            [self.tagView reloadData];
+        }
     }
 }
 
@@ -202,11 +212,12 @@
 
 #pragma mark - TXWTagView Delegate
 // cell 选中
-- (void)tagView:(TXWTagView *)tagView didTappedTagViewCell:(UIView<TXWTagViewCellDelegate> *)tagViewCell atIndex:(NSInteger)index
+- (void)tagView:(TXWTagView *)tagView didTappedtagViewCell:(UIView<TXWTagViewCellDelegate> *)tagViewCell atIndex:(NSInteger)index
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"删除标签" message:@"你确定要删除标签吗？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
-    alert.tag = index;
-    [alert show];
+    
+    TXWTextTagModel *misc = self.tagArrs[index];
+    [tagViewCell reversetagViewCellDirection];
+    misc.direction = tagViewCell.tagViewCellDirection;
 }
 
 //editMode
@@ -217,45 +228,52 @@
 }
 
 // 长按
-- (void)tagView:(TXWTagView *)tagView didLongPressedTagViewCell:(UIView<TXWTagViewCellDelegate> *)tagViewCell atIndex:(NSInteger)index
+- (void)tagView:(TXWTagView *)tagView didLongPressedtagViewCell:(UIView<TXWTagViewCellDelegate> *)tagViewCell atIndex:(NSInteger)index
 {
-    TXWTextTagModel *misc = self.tagArrs[index];
-    [tagViewCell reversetagViewCellDirection];
-    misc.direction = tagViewCell.tagViewCellDirection;
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"删除标签" message:@"你确定要删除标签吗？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    alert.tag = index;
+    [alert show];
 }
 
 // 移动
-- (void)tagView:(TXWTagView *)tagView didMoveTagViewCell:(UIView<TXWTagViewCellDelegate> *)tagViewCell atIndex:(NSInteger)index toNewPositonPercentage:(CGPoint)pointPercentage
+- (void)tagView:(TXWTagView *)tagView didMovetagViewCell:(UIView<TXWTagViewCellDelegate> *)tagViewCell atIndex:(NSInteger)index toNewPositonPercentage:(CGPoint)pointPercentage
 {
     TXWTextTagModel *misc = self.tagArrs[index];
-    misc.posX = pointPercentage.x/self.tagView.frame.size.width;
-    misc.posY = pointPercentage.y/self.tagView.frame.size.height;
+//    misc.posX = pointPercentage.x/self.tagView.frame.size.width;
+//    misc.posY = pointPercentage.y/self.tagView.frame.size.height;
+    misc.posX = pointPercentage.x;
+    misc.posY = pointPercentage.y;
 }
 
 // 添加
-- (void)tagView:(TXWTagView *)tagView addNewTagViewCellTappedAtPosition:(CGPoint)ponit
+- (void)tagView:(TXWTagView *)tagView addNewtagViewCellTappedAtPosition:(CGPoint)ponit
 {
     if (self.tagArrs.count == MAX_TAG_COUNT) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"最多添加5个标签" delegate:nil cancelButtonTitle:@"取消" otherButtonTitles:nil];
         [alert show];
         return;
     }
-    
+    if (self.tagView.isShowTagPoint) {
+        [self showTagPopView];
+        self.tagView.pointIV.hidden = NO;
+    }else{
+        [self dismissTagPopView];
+        self.tagView.pointIV.hidden = YES;
+    }
+
 //    self.selectedPoint = ponit;
-    
-    [self performSegueWithIdentifier:@"showInputTitleVC" sender:self];
+//    [self performSegueWithIdentifier:@"showInputTitleVC" sender:self];
 }
 
 
 #pragma mark - UIGestureRecognizerDelegate
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    return YES;// 支持多手势
-}
+//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+//    return YES;// 支持多手势
+//}
 
 #pragma mark - setter
 - (UIImageView *)pointIV
 {
-    
     if (!_pointIV) {
         _pointIV = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"KK_Filter_hover"]];
         _pointIV.frame= CGRectMake(0, 0, 17, 17);
@@ -267,6 +285,7 @@
 - (UIAlertView *)alertView{
     if (!_alertView) {
         _alertView = [[UIAlertView alloc]initWithTitle:@"添加标签"message:@"请为新标签输入名称"delegate:self cancelButtonTitle:@"取消"otherButtonTitles:@"确定", nil];
+        _alertView.tag = 999;
         // 设置AlertView样式
         _alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
         

@@ -110,7 +110,6 @@
             
             [tagViewCell adjustViewFrameWithGivenPositionPercentage:tagViewCell.centerPointPercentage andContainerSize:self.bounds.size];
             
-            
             //编辑模式独有事件
             if (self.viewMode == TXWTagViewModeEdit) {
                 
@@ -120,9 +119,9 @@
                     CGPoint centerPointPercentage = CGPointMake(itemPosition.x / self.bounds.size.width, itemPosition.y / self.bounds.size.height);
                     [self.delegate tagView:self didMovetagViewCell:tagViewCell atIndex:tagViewCell.containerCountIndex toNewPositonPercentage:centerPointPercentage];
                 }
-                
             }
             
+            tagViewCell.exclusiveTouch = YES;
             [self.tagsContainer addSubview:tagViewCell];
         }
     }
@@ -294,18 +293,6 @@
     if(!CGRectContainsPoint(self.frame, point)){return;}// 点不在区域内，return
     // self.tagPoint = point;
     
-    if (self.isShowTagPoint) {
-        CGRect frame = self.pointIV.frame;
-        frame.origin = CGPointMake(point.x-17/2, point.y-17/2);
-        self.pointIV.frame = frame;
-        self.pointIV.hidden = NO;
-        
-    }else{
-        
-        self.pointIV.hidden = YES;
-    }
-    self.isShowTagPoint = !self.isShowTagPoint;
-    
     if (touch.view == self.tagsContainer) {
         if (self.viewMode == TXWTagViewModePreview) {
             [self hideTagItems];
@@ -316,10 +303,43 @@
                     [self.delegate tagView:self addNewtagViewCellTappedAtPosition:position];
                 }
             }
+            if (self.isShowTagPoint) {
+                CGRect frame = self.pointIV.frame;
+                frame.origin = CGPointMake(point.x-17/2, point.y-17/2);
+                self.pointIV.frame = frame;
+                self.pointIV.hidden = NO;
+                
+            }else{
+                
+                self.pointIV.hidden = YES;
+            }
+            self.isShowTagPoint = !self.isShowTagPoint;
         }
+    }else if ([touch.view conformsToProtocol:@protocol(TXWTagViewCellDelegate)]){
+//        UIView<TXWTagViewCellDelegate> *tagViewCell = (UIView<TXWTagViewCellDelegate> *)touch.view;
+//        if ([self.delegate respondsToSelector:@selector(tagView:didTappedtagViewCell:atIndex:)]) {
+//            [self.delegate tagView:self didTappedtagViewCell:tagViewCell atIndex:tagViewCell.containerCountIndex];
+//        }
     }else{
-        
+        if ([self.delegate respondsToSelector:@selector(tagView:addNewtagViewCellTappedAtPosition:)]) {
+            CGPoint position = [touch locationInView:self.tagsContainer];
+            if (!CGRectContainsPoint(self.disableTagArea, position)) {
+                [self.delegate tagView:self addNewtagViewCellTappedAtPosition:position];
+            }
+        }
+        if (self.isShowTagPoint) {
+            CGRect frame = self.pointIV.frame;
+            frame.origin = CGPointMake(point.x-17/2, point.y-17/2);
+            self.pointIV.frame = frame;
+            self.pointIV.hidden = NO;
+            
+        }else{
+            
+            self.pointIV.hidden = YES;
+        }
+        self.isShowTagPoint = !self.isShowTagPoint;
     }
+    
 }
 
 #pragma mark - setter
