@@ -211,7 +211,7 @@
             [self.delegate tagView:self didMovetagViewCell:tagViewCell atIndex:tagViewCell.containerCountIndex toNewPositonPercentage:centerPointPercentage];
         }
     };
-    
+
     //判断不可放置tag区域
     if (CGRectContainsPoint(self.disableTagArea, centerPoint)) {
         reportDelegateSavePosition();
@@ -231,34 +231,39 @@
     CGFloat tagViewRightWidth = tagViewCell.bounds.size.width - tagViewLeftWidth;
     
     if (tagViewCell.tagViewCellDirection == TXWTagViewCellDirectionLeft) {
+//        centerPoint.x -= tagViewCell.bounds.size.width / 2;
         if (centerPoint.x - tagViewLeftWidth < containerBounds.origin.x || centerPoint.x + tagViewRightWidth > containerBounds.origin.x + containerBounds.size.width) {
             if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-                if ([tagViewCell checkCanReversetagViewCellDirectionWithContainerSize:self.bounds.size])
-                {
-                    [tagViewCell reversetagViewCellDirection];
-                    if ([self.delegate respondsToSelector:@selector(tagView:tagViewCell:didChangedDirection:AtIndex:)]) {
-                        [self.delegate tagView:self tagViewCell:tagViewCell didChangedDirection:tagViewCell.tagViewCellDirection AtIndex:tagViewCell.containerCountIndex];
-                    }
-                }
+//                if ([tagViewCell checkCanReversetagViewCellDirectionWithContainerSize:self.bounds.size])
+//                {
+//                    [tagViewCell reversetagViewCellDirection];
+//                    if ([self.delegate respondsToSelector:@selector(tagView:tagViewCell:didChangedDirection:AtIndex:)]) {
+//                        [self.delegate tagView:self tagViewCell:tagViewCell didChangedDirection:tagViewCell.tagViewCellDirection AtIndex:tagViewCell.containerCountIndex];
+//                    }
+//                }
             }
             reportDelegateSavePosition();
             return;
         }
+        [tagViewCell setCenter:CGPointMake(centerPoint.x-self.offsetX, centerPoint.y-self.offsetY)];
     } else {
+//        centerPoint.x += tagViewCell.bounds.size.width / 2;// 偏移量一直不对，因为这个
         if (centerPoint.x - tagViewLeftWidth < containerBounds.origin.x || centerPoint.x + tagViewRightWidth > containerBounds.origin.x + containerBounds.size.width) {
             if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-                if ([tagViewCell checkCanReversetagViewCellDirectionWithContainerSize:self.bounds.size])
-                {
-                    [tagViewCell reversetagViewCellDirection];
-                    if ([self.delegate respondsToSelector:@selector(tagView:tagViewCell:didChangedDirection:AtIndex:)]) {
-                        [self.delegate tagView:self tagViewCell:tagViewCell didChangedDirection:tagViewCell.tagViewCellDirection AtIndex:tagViewCell.containerCountIndex];
-                    }
-                }
+//                if ([tagViewCell checkCanReversetagViewCellDirectionWithContainerSize:self.bounds.size])
+//                {
+//                    [tagViewCell reversetagViewCellDirection];
+//                    if ([self.delegate respondsToSelector:@selector(tagView:tagViewCell:didChangedDirection:AtIndex:)]) {
+//                        [self.delegate tagView:self tagViewCell:tagViewCell didChangedDirection:tagViewCell.tagViewCellDirection AtIndex:tagViewCell.containerCountIndex];
+//                    }
+//                }
             }
             reportDelegateSavePosition();
             return;
         }
+        [tagViewCell setCenter:CGPointMake(centerPoint.x-self.offsetX, centerPoint.y-self.offsetY)];
     }
+//    }
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
         reportDelegateSavePosition();
     }
@@ -311,6 +316,10 @@
             self.isShowTagPoint = !self.isShowTagPoint;
         }
     }else if ([touch.view conformsToProtocol:@protocol(TXWTagViewCellDelegate)]){
+        CGRect tagViewCellFrame = touch.view.frame;// 计算偏移量。手势坐标和center坐标偏差计算，拖动的时候修正
+        self.offsetX = point.x-tagViewCellFrame.size.width/2;
+        self.offsetY = point.y-tagViewCellFrame.size.height/2;
+
     }else{
         if ([self.delegate respondsToSelector:@selector(tagView:addNewtagViewCellTappedAtPosition:)]) {
             CGPoint position = [touch locationInView:self.tagsContainer];
