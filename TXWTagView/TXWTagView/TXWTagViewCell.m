@@ -14,12 +14,11 @@
 #define TAG_TYPE_WIDTH 11
 #define TAG_BG_HEIGHT 26
 
+#define TAGTYPEICON_TAGBGIV_PADDING 5 // 类型图标和标签背景间距
 #define TAGLABEL_LEFT_X 3
 #define TAGLABEL_RIGHT_X 10
 #define TAG_ARROW_WIDTH 8
 
-static const CGFloat ktagViewCellSideEdge = 6.0f;
-static const CGFloat ktagViewCellCornerSideEdge = 10.0f;
 
 @interface TXWTagViewCell ()
 
@@ -76,7 +75,7 @@ static const CGFloat ktagViewCellCornerSideEdge = 10.0f;
 {
     if (CGSizeEqualToSize(_cachedTagSize, CGSizeZero)) {
 
-        _cachedTagSize = CGSizeMake([self widthByStr:self.tagModel.text]+TAG_ARROW_WIDTH+TAGBG_LABEL_PAD+TAG_TYPE_WIDTH, TAG_BG_HEIGHT);
+        _cachedTagSize = CGSizeMake([self widthByStr:self.tagModel.text]+TAG_ARROW_WIDTH+TAGBG_LABEL_PAD+TAG_TYPE_WIDTH+TAGTYPEICON_TAGBGIV_PADDING, TAG_BG_HEIGHT);
         
     }
     return _cachedTagSize;
@@ -140,12 +139,70 @@ static const CGFloat ktagViewCellCornerSideEdge = 10.0f;
     _tagViewCellDirection = tagViewCellDirection;
 }
 
-
+// alvin 判断边界问题
 - (void)adjustViewFrameWithGivenPositionPercentage:(CGPoint)pointPercentage andContainerSize:(CGSize)size
 {
+//    self.frame = CGRectMake(0, 0, self.tagWidth, self.tagHeight);
+//
+//    CGPoint exactPoint = CGPointMake(pointPercentage.x * size.width, pointPercentage.y * size.height);// 中心点
+////    CGRect cellFrame = CGRectMake(exactPoint.x, exactPoint.y, self.tagWidth, self.tagHeight);
+//    //左边标签超出边界
+//    if (exactPoint.x - self.tagWidth * self.layer.anchorPoint.x < 0) {
+//        exactPoint.x = self.tagWidth * self.layer.anchorPoint.x;
+//    }
+//    //右边标签超出边界
+//    if (exactPoint.x + self.tagWidth * (1 - self.layer.anchorPoint.x) > size.width) {
+//        exactPoint.x = size.width - self.tagWidth * (1 - self.layer.anchorPoint.x);
+//    }
+//    //上边标签超出边界
+//    if (exactPoint.y - self.tagHeight * self.layer.anchorPoint.y < 0) {
+//        exactPoint.y = self.tagHeight * self.layer.anchorPoint.y;
+//    }
+//    //下边标签超出边界
+//    if (exactPoint.y + self.tagHeight * (1 - self.layer.anchorPoint.y) > size.height) {
+//        exactPoint.y = size.height - self.tagHeight * (1 - self.layer.anchorPoint.y);
+//    }
+    
+    // 需要根据方向判断
+    // 解决方法是 位移还是转向
+    
+//    if (self.tagModel.direction == TXWTagViewCellDirectionLeft) {
+//        exactPoint.x -= self.tagWidth/2;
+//        //左边标签超出边界
+//        if (exactPoint.x - self.tagWidth < 0) {
+//            exactPoint.x = self.tagWidth;
+//        }
+//        //右边标签超出边界
+//        if (exactPoint.x > size.width) {
+//            exactPoint.x = size.width;
+//        }
+//    }else{
+//        exactPoint.x += self.tagWidth/2;
+//        //左边标签超出边界
+//        if (exactPoint.x < 0) {
+//            exactPoint.x = 0;
+//        }
+//        //右边标签超出边界
+//        if (exactPoint.x + self.tagWidth > size.width) {
+//            exactPoint.x = size.width - self.tagWidth;
+//        }
+//    }
+//
+//    
+//    //上边标签超出边界
+//    if (exactPoint.y - self.tagHeight / 2 < 0) {
+//        exactPoint.y = self.tagHeight / 2;
+//    }
+//    //下边标签超出边界
+//    if (exactPoint.y + self.tagHeight/2 > size.height) {
+//        exactPoint.y = size.height - self.tagHeight/2;
+//    }
+    
+//    self.layer.position = exactPoint;
+//    self.frame = cellFrame;
+    
     self.frame = CGRectMake(0, 0, self.tagWidth, self.tagHeight);
-//    [self configAdjustAnchorPoint];
-    CGPoint exactPoint = CGPointMake(pointPercentage.x * size.width, pointPercentage.y * size.height);
+    CGPoint exactPoint = CGPointMake(pointPercentage.x * size.width-self.tagWidth/2, pointPercentage.y * size.height);
     
     //左边标签超出边界
     if (exactPoint.x - self.tagWidth * self.layer.anchorPoint.x < 0) {
@@ -165,6 +222,7 @@ static const CGFloat ktagViewCellCornerSideEdge = 10.0f;
     }
     
     self.layer.position = exactPoint;
+
 }
 
 
@@ -191,6 +249,7 @@ static const CGFloat ktagViewCellCornerSideEdge = 10.0f;
     [self setNeedsLayout];
 }
 
+// 是否可以改变方向
 - (BOOL)checkCanReversetagViewCellDirectionWithContainerSize:(CGSize)size
 {
     if (self.tagModel.direction == TXWTagViewCellDirectionRight) {
@@ -256,17 +315,17 @@ static const CGFloat ktagViewCellCornerSideEdge = 10.0f;
     
     if (self.tagModel.direction == TXWTagViewCellDirectionLeft) {
 
-        TagBgImageViewframe = CGRectMake(0, 0, self.tagWidth-TAG_TYPE_WIDTH, TAG_BG_HEIGHT);
+        TagBgImageViewframe = CGRectMake(0, 0, self.tagWidth-TAG_TYPE_WIDTH-TAGTYPEICON_TAGBGIV_PADDING, TAG_BG_HEIGHT);
         TagLabelframe.origin.x = TAGLABEL_LEFT_X;
-        TagLabelframe.size.width = self.tagWidth-TAG_TYPE_WIDTH-TAG_ARROW_WIDTH-TAGBG_LABEL_PAD;
+        TagLabelframe.size.width = self.tagWidth-TAG_TYPE_WIDTH-TAG_ARROW_WIDTH-TAGBG_LABEL_PAD-TAGTYPEICON_TAGBGIV_PADDING;
         self.tagIV.image = [self.leftBgImage resizableImageWithCapInsets:UIEdgeInsetsMake(4, 5, 4, 12) resizingMode:UIImageResizingModeStretch];
         TagTypeImageViewframe.origin = CGPointMake(self.tagWidth-TAG_TYPE_WIDTH, (TAG_BG_HEIGHT-TAG_TYPE_WIDTH)/2);
         
     }else{
         
-        TagBgImageViewframe = CGRectMake(TAG_TYPE_WIDTH, 0, self.tagWidth-TAG_TYPE_WIDTH, TAG_BG_HEIGHT);
+        TagBgImageViewframe = CGRectMake(TAG_TYPE_WIDTH+TAGTYPEICON_TAGBGIV_PADDING, 0, self.tagWidth-TAG_TYPE_WIDTH-TAGTYPEICON_TAGBGIV_PADDING, TAG_BG_HEIGHT);
         TagLabelframe.origin.x = TAGLABEL_RIGHT_X;
-        TagLabelframe.size.width = self.tagWidth-TAG_TYPE_WIDTH-TAG_ARROW_WIDTH-TAGBG_LABEL_PAD;
+        TagLabelframe.size.width = self.tagWidth-TAG_TYPE_WIDTH-TAG_ARROW_WIDTH-TAGBG_LABEL_PAD-TAGTYPEICON_TAGBGIV_PADDING;
         self.tagIV.image = [self.rightBgImage resizableImageWithCapInsets:UIEdgeInsetsMake(4, 12, 4, 5) resizingMode:UIImageResizingModeStretch];
         TagTypeImageViewframe.origin = CGPointMake(0, (TAG_BG_HEIGHT-TAG_TYPE_WIDTH)/2);
 
@@ -275,10 +334,6 @@ static const CGFloat ktagViewCellCornerSideEdge = 10.0f;
     self.tagIV.frame = TagBgImageViewframe;
     self.tagLabel.frame = TagLabelframe;
     self.tagTypeIV.frame = TagTypeImageViewframe;
-
-    
-//    cellFrame.size = CGSizeMake(frame2.size.width+TAG_TYPE_WIDTH, TAG_BG_HEIGHT);
-
 
 }
 
@@ -301,6 +356,7 @@ static const CGFloat ktagViewCellCornerSideEdge = 10.0f;
     return y;
 }
 
+// 点击区域
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
     CGRect frame = CGRectInset(self.bounds, -2, -2);

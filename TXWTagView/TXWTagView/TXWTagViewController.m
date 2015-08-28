@@ -204,7 +204,6 @@
     TXWTagViewCell *tagViewCell = [[TXWTagViewCell alloc] init];
     tagViewCell.tagModel = tag;
     tagViewCell.tagViewFrame = self.tagView.frame;
-//    tagViewCell.titleText = tag.text;
     tagViewCell.tagViewCellDirection = tag.direction;
     tagViewCell.centerPointPercentage = CGPointMake(tag.posX, tag.posY);
     return tagViewCell;
@@ -241,8 +240,6 @@
 - (void)tagView:(TXWTagView *)tagView didMovetagViewCell:(UIView<TXWTagViewCellDelegate> *)tagViewCell atIndex:(NSInteger)index toNewPositonPercentage:(CGPoint)pointPercentage
 {
     TXWTextTagModel *misc = self.tagArrs[index];
-//    misc.posX = pointPercentage.x/self.tagView.frame.size.width;
-//    misc.posY = pointPercentage.y/self.tagView.frame.size.height;
     misc.posX = pointPercentage.x;
     misc.posY = pointPercentage.y;
 }

@@ -9,19 +9,14 @@
 #import "TXWTagView.h"
 #import "UIImage+rotate.h"
 
-#define TAGBG_LABEL_PAD 5
-#define TYPEICON_TAGBG 8
-#define TAG_TYPE_WIDTH 11
-#define TAG_BG_WIDTH 26
-
-#define TAGLABEL_LEFT_X 3
-#define TAGLABEL_RIGHT_X 10
 @interface TXWTagView()<UIGestureRecognizerDelegate>
 @property (strong,nonatomic) UIImageView *tagTypeIV;
 @property (strong,nonatomic) UIImageView *tagIV;
 @property (strong,nonatomic) UILabel *tagLabel;
 @property (strong,nonatomic) id model;
 @property (assign,nonatomic) BOOL isEdit;// 编辑状态
+@property (assign,nonatomic) CGFloat offsetX;
+@property (assign,nonatomic) CGFloat offsetY;
 
 @property (strong, nonatomic) UIView *tagsContainer;
 
@@ -201,16 +196,10 @@
 
 - (void)tagViewCellDidDraged:(UIGestureRecognizer *)gestureRecognizer
 {
-    
+
     UIView<TXWTagViewCellDelegate> *tagViewCell = (UIView<TXWTagViewCellDelegate> *)gestureRecognizer.view;
     CGPoint centerPoint = [gestureRecognizer locationInView:self.tagsContainer];
-    CGFloat offsetX = 30;
-    CGFloat offsetY = 5;
-    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        CGRect tagViewCellFrame = tagViewCell.frame;// 计算偏移量
-        offsetX = tagViewCellFrame.origin.x - centerPoint.x;
-        offsetY = tagViewCellFrame.origin.y - centerPoint.y;
-    }
+    
     
     CGRect containerBounds = self.tagsContainer.bounds;
     
@@ -242,7 +231,6 @@
     CGFloat tagViewRightWidth = tagViewCell.bounds.size.width - tagViewLeftWidth;
     
     if (tagViewCell.tagViewCellDirection == TXWTagViewCellDirectionLeft) {
-        centerPoint.x -= tagViewCell.bounds.size.width / 2;
         if (centerPoint.x - tagViewLeftWidth < containerBounds.origin.x || centerPoint.x + tagViewRightWidth > containerBounds.origin.x + containerBounds.size.width) {
             if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
                 if ([tagViewCell checkCanReversetagViewCellDirectionWithContainerSize:self.bounds.size])
@@ -256,9 +244,7 @@
             reportDelegateSavePosition();
             return;
         }
-        [tagViewCell setCenter:CGPointMake(centerPoint.x+offsetX, centerPoint.y)];
     } else {
-        centerPoint.x += tagViewCell.bounds.size.width / 2;
         if (centerPoint.x - tagViewLeftWidth < containerBounds.origin.x || centerPoint.x + tagViewRightWidth > containerBounds.origin.x + containerBounds.size.width) {
             if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
                 if ([tagViewCell checkCanReversetagViewCellDirectionWithContainerSize:self.bounds.size])
@@ -272,9 +258,7 @@
             reportDelegateSavePosition();
             return;
         }
-        [tagViewCell setCenter:CGPointMake(centerPoint.x-offsetX, centerPoint.y)];
     }
-    
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
         reportDelegateSavePosition();
     }
@@ -327,10 +311,6 @@
             self.isShowTagPoint = !self.isShowTagPoint;
         }
     }else if ([touch.view conformsToProtocol:@protocol(TXWTagViewCellDelegate)]){
-//        UIView<TXWTagViewCellDelegate> *tagViewCell = (UIView<TXWTagViewCellDelegate> *)touch.view;
-//        if ([self.delegate respondsToSelector:@selector(tagView:didTappedtagViewCell:atIndex:)]) {
-//            [self.delegate tagView:self didTappedtagViewCell:tagViewCell atIndex:tagViewCell.containerCountIndex];
-//        }
     }else{
         if ([self.delegate respondsToSelector:@selector(tagView:addNewtagViewCellTappedAtPosition:)]) {
             CGPoint position = [touch locationInView:self.tagsContainer];
