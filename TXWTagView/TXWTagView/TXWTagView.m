@@ -88,7 +88,7 @@
             tagViewCell.containerCountIndex = i;
 //            tagViewCell.adaptViewScale = self.bounds.size.width / 320.0f;
             
-            //编辑模式独有事件
+            // 编辑模式独有事件
             if (self.viewMode == TXWTagViewModeEdit) {
                 //长按事件
                 UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(tagViewCellLongPressed:)];
@@ -106,15 +106,15 @@
             [tagViewCell adjustViewFrameWithGivenPositionPercentage:tagViewCell.centerPointPercentage andContainerSize:self.bounds.size];
             
             //编辑模式独有事件
-            if (self.viewMode == TXWTagViewModeEdit) {
-                
-                //编辑模式下位置有可能改变
-                if ([self.delegate respondsToSelector:@selector(tagView:didMovetagViewCell:atIndex:toNewPositonPercentage:)]) {
-                    CGPoint itemPosition = tagViewCell.layer.position;
-                    CGPoint centerPointPercentage = CGPointMake(itemPosition.x / self.bounds.size.width, itemPosition.y / self.bounds.size.height);
-                    [self.delegate tagView:self didMovetagViewCell:tagViewCell atIndex:tagViewCell.containerCountIndex toNewPositonPercentage:centerPointPercentage];
-                }
-            }
+//            if (self.viewMode == TXWTagViewModeEdit) {
+//                
+//                //编辑模式下位置有可能改变
+//                if ([self.delegate respondsToSelector:@selector(tagView:didMovetagViewCell:atIndex:toNewPositonPercentage:)]) {
+//                    CGPoint itemPosition = tagViewCell.layer.position;
+//                    CGPoint centerPointPercentage = CGPointMake(itemPosition.x / self.bounds.size.width, itemPosition.y / self.bounds.size.height);
+//                    [self.delegate tagView:self didMovetagViewCell:tagViewCell atIndex:tagViewCell.containerCountIndex toNewPositonPercentage:centerPointPercentage];
+//                }
+//            }
             
             tagViewCell.exclusiveTouch = YES;
             [self.tagsContainer addSubview:tagViewCell];
@@ -212,28 +212,34 @@
         }
     };
 
-    //判断不可放置tag区域
+    // 判断不可放置tag区域
     if (CGRectContainsPoint(self.disableTagArea, centerPoint)) {
         reportDelegateSavePosition();
         return;
     }
     
-    //判断纵向是否超出边界
+    // 判断纵向是否超出边界
     CGFloat tagViewTopHeight = tagViewCell.bounds.size.height * tagViewCell.layer.anchorPoint.y;
     CGFloat tagViewBottomHeight = tagViewCell.bounds.size.height - tagViewTopHeight;
-    if (centerPoint.y - tagViewTopHeight < containerBounds.origin.y || centerPoint.y + tagViewBottomHeight > containerBounds.origin.y + containerBounds.size.height) {
+    if (centerPoint.y - self.offsetY - tagViewTopHeight < containerBounds.origin.y) {
+        centerPoint.y = containerBounds.origin.y + self.offsetY + tagViewTopHeight;
+        reportDelegateSavePosition();
+        return;
+    }
+    if (centerPoint.y - self.offsetY + tagViewBottomHeight > containerBounds.origin.y + containerBounds.size.height) {
+        centerPoint.y  = containerBounds.origin.y + containerBounds.size.height + self.offsetY - tagViewBottomHeight;
         reportDelegateSavePosition();
         return;
     }
     
-    //判断横向是否超出边界
+    // 判断横向是否超出边界
     CGFloat tagViewLeftWidth = tagViewCell.bounds.size.width * tagViewCell.layer.anchorPoint.x;
     CGFloat tagViewRightWidth = tagViewCell.bounds.size.width - tagViewLeftWidth;
     
     if (tagViewCell.tagViewCellDirection == TXWTagViewCellDirectionLeft) {
 //        centerPoint.x -= tagViewCell.bounds.size.width / 2;
-        if (centerPoint.x - tagViewLeftWidth < containerBounds.origin.x || centerPoint.x + tagViewRightWidth > containerBounds.origin.x + containerBounds.size.width) {
-            if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+//        if (centerPoint.x-self.offsetX - tagViewLeftWidth < containerBounds.origin.x || centerPoint.x-self.offsetX + tagViewRightWidth > containerBounds.origin.x + containerBounds.size.width) {
+//            if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
 //                if ([tagViewCell checkCanReversetagViewCellDirectionWithContainerSize:self.bounds.size])
 //                {
 //                    [tagViewCell reversetagViewCellDirection];
@@ -241,15 +247,27 @@
 //                        [self.delegate tagView:self tagViewCell:tagViewCell didChangedDirection:tagViewCell.tagViewCellDirection AtIndex:tagViewCell.containerCountIndex];
 //                    }
 //                }
-            }
+//            }
+//            reportDelegateSavePosition();
+//            return;
+//        }
+        if (centerPoint.x-self.offsetX + tagViewRightWidth > containerBounds.origin.x + containerBounds.size.width) {
+
+            centerPoint.x = containerBounds.origin.x + containerBounds.size.width + self.offsetX - tagViewRightWidth;
+            reportDelegateSavePosition();
+            return;
+        }
+        if (centerPoint.x-self.offsetX - tagViewLeftWidth < containerBounds.origin.x ) {
+            
+            centerPoint.x = tagViewLeftWidth + containerBounds.origin.x + self.offsetX;
             reportDelegateSavePosition();
             return;
         }
         [tagViewCell setCenter:CGPointMake(centerPoint.x-self.offsetX, centerPoint.y-self.offsetY)];
     } else {
 //        centerPoint.x += tagViewCell.bounds.size.width / 2;// 偏移量一直不对，因为这个
-        if (centerPoint.x - tagViewLeftWidth < containerBounds.origin.x || centerPoint.x + tagViewRightWidth > containerBounds.origin.x + containerBounds.size.width) {
-            if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+//        if (centerPoint.x - tagViewLeftWidth < containerBounds.origin.x || centerPoint.x + tagViewRightWidth > containerBounds.origin.x + containerBounds.size.width) {
+//            if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
 //                if ([tagViewCell checkCanReversetagViewCellDirectionWithContainerSize:self.bounds.size])
 //                {
 //                    [tagViewCell reversetagViewCellDirection];
@@ -257,20 +275,31 @@
 //                        [self.delegate tagView:self tagViewCell:tagViewCell didChangedDirection:tagViewCell.tagViewCellDirection AtIndex:tagViewCell.containerCountIndex];
 //                    }
 //                }
-            }
+//            }
+//            reportDelegateSavePosition();
+//            return;
+//        }
+        if (centerPoint.x - self.offsetX - tagViewLeftWidth < containerBounds.origin.x) {
+
+            centerPoint.x = containerBounds.origin.x + tagViewLeftWidth + self.offsetX;
+            reportDelegateSavePosition();
+            return;
+        }
+        if (centerPoint.x - self.offsetX + tagViewRightWidth > containerBounds.origin.x + containerBounds.size.width) {
+
+            centerPoint.x = containerBounds.origin.x + containerBounds.size.width + self.offsetX - tagViewRightWidth;
             reportDelegateSavePosition();
             return;
         }
         [tagViewCell setCenter:CGPointMake(centerPoint.x-self.offsetX, centerPoint.y-self.offsetY)];
     }
-//    }
+
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
         reportDelegateSavePosition();
     }
     
     [tagViewCell setNeedsLayout];
-    [tagViewCell setNeedsUpdateConstraints];
-
+    
 }
 
 #pragma mark - UIGestureRecognize Delegate Methods
@@ -291,7 +320,6 @@
     CGPoint point = [touch locationInView:touch.view];
     self.tagPoint = point;
     if(!CGRectContainsPoint(self.frame, point)){return;}// 点不在区域内，return
-    // self.tagPoint = point;
     
     if (touch.view == self.tagsContainer) {
         if (self.viewMode == TXWTagViewModePreview) {

@@ -202,7 +202,8 @@
 //    self.frame = cellFrame;
     
     self.frame = CGRectMake(0, 0, self.tagWidth, self.tagHeight);
-    CGPoint exactPoint = CGPointMake(pointPercentage.x * size.width-self.tagWidth/2, pointPercentage.y * size.height);
+//    CGPoint exactPoint = CGPointMake(pointPercentage.x * size.width-self.tagWidth/2, pointPercentage.y * size.height);
+    CGPoint exactPoint = CGPointMake(self.tagModel.posX * size.width-self.tagWidth/2, self.tagModel.posY * size.height);
     
     //左边标签超出边界
     if (exactPoint.x - self.tagWidth * self.layer.anchorPoint.x < 0) {
