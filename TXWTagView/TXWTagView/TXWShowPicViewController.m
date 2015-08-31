@@ -22,7 +22,6 @@
     self.tagView.backgroundImageView.image = self.bgImage;
     self.tagView.userInteractionEnabled = YES;
     [self.view addSubview:self.tagView];
-    NSLog(@"numberOftagViewCells = %d ",self.tags.count);
     [self.tagView reloadData];
     [self.tagView makeTagItemsAnimated];
 

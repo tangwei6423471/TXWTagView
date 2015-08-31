@@ -60,10 +60,8 @@
     showVc.tags = self.tagArrs;
     showVc.bgImage = [UIImage imageNamed:@"demo"];
     NSLog(@"showVc.tagArrs = %d",showVc.tags.count);
-//    [self.navigationController pushViewController:showVc animated:YES];
-    [self presentViewController:showVc animated:YES completion:^{
-        
-    }];
+    [self.navigationController pushViewController:showVc animated:YES];
+
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
