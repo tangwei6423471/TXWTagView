@@ -10,6 +10,12 @@
 
 #import <UIKit/UIKit.h>
 
+typedef enum : NSUInteger {
+    kTagNomal,
+    kTagLocation,
+    kTagPeople,
+} TagType;
+
 /*
  
  "imgKey": 5,

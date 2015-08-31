@@ -8,6 +8,7 @@
 
 #import "TXWTagView.h"
 #import "UIImage+rotate.h"
+#define TAG_TYPE_WIDTH 12
 
 @interface TXWTagView()<UIGestureRecognizerDelegate>
 @property (strong,nonatomic) UIImageView *tagTypeIV;
@@ -44,21 +45,17 @@
 {
     // Initialization code
     self.isShowTagPoint = YES;
-    self.backgroundImageView = [[UIImageView alloc] initWithFrame:self.frame];
+    self.backgroundImageView = [[UIImageView alloc] initWithFrame:self.bounds];// 不能用frame
     self.backgroundImageView.userInteractionEnabled = YES;
     [self addSubview:self.backgroundImageView];
-//    [self.backgroundImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.left.right.bottom.equalTo(self);
-//    }];
-    self.tagsContainer = [[UIView alloc]initWithFrame:self.frame];
+
+    self.tagsContainer = [[UIView alloc]initWithFrame:self.bounds];// 不能用frame
     self.tagsContainer.translatesAutoresizingMaskIntoConstraints = NO;
     self.clipsToBounds = YES;
     self.tagsContainer.backgroundColor = [UIColor clearColor];
     self.tagsContainer.userInteractionEnabled = YES;
     [self addSubview:self.tagsContainer];
-//    [self.tagsContainer mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.left.right.bottom.equalTo(self);
-//    }];
+
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backGroundViewDidTapped:)];
     tap.delegate = self;
     [self.backgroundImageView addGestureRecognizer:tap];
@@ -86,7 +83,6 @@
         for (NSInteger i = 0; i < tagCount; i ++) {
             UIView<TXWTagViewCellDelegate> *tagViewCell = [self.dataSource tagView:self tagViewCellAtIndex:i];
             tagViewCell.containerCountIndex = i;
-//            tagViewCell.adaptViewScale = self.bounds.size.width / 320.0f;
             
             // 编辑模式独有事件
             if (self.viewMode == TXWTagViewModeEdit) {
@@ -106,15 +102,22 @@
             [tagViewCell adjustViewFrameWithGivenPositionPercentage:tagViewCell.centerPointPercentage andContainerSize:self.bounds.size];
             
             //编辑模式独有事件
-//            if (self.viewMode == TXWTagViewModeEdit) {
-//                
-//                //编辑模式下位置有可能改变
-//                if ([self.delegate respondsToSelector:@selector(tagView:didMovetagViewCell:atIndex:toNewPositonPercentage:)]) {
-//                    CGPoint itemPosition = tagViewCell.layer.position;
-//                    CGPoint centerPointPercentage = CGPointMake(itemPosition.x / self.bounds.size.width, itemPosition.y / self.bounds.size.height);
-//                    [self.delegate tagView:self didMovetagViewCell:tagViewCell atIndex:tagViewCell.containerCountIndex toNewPositonPercentage:centerPointPercentage];
-//                }
-//            }
+            if (self.viewMode == TXWTagViewModeEdit) {
+                
+                //编辑模式下位置有可能改变
+                if ([self.delegate respondsToSelector:@selector(tagView:didMovetagViewCell:atIndex:toNewPositonPercentage:)]) {
+                    CGPoint itemPosition = tagViewCell.layer.position;
+
+                    CGPoint centerPointPercentage;
+                    if (tagViewCell.tagViewCellDirection == TXWTagViewCellDirectionLeft) {
+                        centerPointPercentage = CGPointMake((itemPosition.x+tagViewCell.tagWidth/2-TAG_TYPE_WIDTH/2)/self.bounds.size.width, itemPosition.y / self.bounds.size.height);
+                    }else{
+                        centerPointPercentage = CGPointMake((itemPosition.x-tagViewCell.tagWidth/2+TAG_TYPE_WIDTH/2)/self.bounds.size.width, itemPosition.y / self.bounds.size.height);
+                    }
+
+                    [self.delegate tagView:self didMovetagViewCell:tagViewCell atIndex:tagViewCell.containerCountIndex toNewPositonPercentage:centerPointPercentage];
+                }
+            }
             
             tagViewCell.exclusiveTouch = YES;
             [self.tagsContainer addSubview:tagViewCell];
@@ -206,8 +209,14 @@
     void (^reportDelegateSavePosition)() = ^ {
         if ([self.delegate respondsToSelector:@selector(tagView:didMovetagViewCell:atIndex:toNewPositonPercentage:)]) {
             
-            CGPoint itemPosition = tagViewCell.layer.position;
-            CGPoint centerPointPercentage = CGPointMake((itemPosition.x) / self.bounds.size.width, (itemPosition.y ) / self.bounds.size.height);
+            CGPoint itemPosition = tagViewCell.layer.position; // center
+            CGPoint centerPointPercentage;// center转换成鼠标点击的点
+            if (tagViewCell.tagViewCellDirection == TXWTagViewCellDirectionLeft) {
+                centerPointPercentage = CGPointMake((itemPosition.x+tagViewCell.tagWidth/2-TAG_TYPE_WIDTH/2)/self.bounds.size.width, itemPosition.y / self.bounds.size.height);
+            }else{
+                centerPointPercentage = CGPointMake((itemPosition.x-tagViewCell.tagWidth/2+TAG_TYPE_WIDTH/2)/self.bounds.size.width, itemPosition.y / self.bounds.size.height);
+            }
+
             [self.delegate tagView:self didMovetagViewCell:tagViewCell atIndex:tagViewCell.containerCountIndex toNewPositonPercentage:centerPointPercentage];
         }
     };
@@ -315,11 +324,13 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     UITouch *touch = [touches anyObject];
-    NSLog(@"touchesBegan %@",NSStringFromClass([touch.view class]));
+    NSLog(@"touchesBegan %@ " ,NSStringFromClass([touch.view class]));
     
     CGPoint point = [touch locationInView:touch.view];
     self.tagPoint = point;
-    if(!CGRectContainsPoint(self.frame, point)){return;}// 点不在区域内，return
+    if(!CGRectContainsPoint(self.bounds, point)){
+        return; // self.frame bug
+    }// 点不在区域内，return
     
     if (touch.view == self.tagsContainer) {
         if (self.viewMode == TXWTagViewModePreview) {
@@ -344,28 +355,38 @@
             self.isShowTagPoint = !self.isShowTagPoint;
         }
     }else if ([touch.view conformsToProtocol:@protocol(TXWTagViewCellDelegate)]){
-        CGRect tagViewCellFrame = touch.view.frame;// 计算偏移量。手势坐标和center坐标偏差计算，拖动的时候修正
-        self.offsetX = point.x-tagViewCellFrame.size.width/2;
-        self.offsetY = point.y-tagViewCellFrame.size.height/2;
+        if (self.viewMode == TXWTagViewModeEdit) {
+            CGRect tagViewCellFrame = touch.view.frame;// 计算偏移量。手势坐标和center坐标偏差计算，拖动的时候修正
+            self.offsetX = point.x-tagViewCellFrame.size.width/2;
+            self.offsetY = point.y-tagViewCellFrame.size.height/2;
+        }else{
+            // 点击cell method
+        }
+        
 
     }else{
-        if ([self.delegate respondsToSelector:@selector(tagView:addNewtagViewCellTappedAtPosition:)]) {
-            CGPoint position = [touch locationInView:self.tagsContainer];
-            if (!CGRectContainsPoint(self.disableTagArea, position)) {
-                [self.delegate tagView:self addNewtagViewCellTappedAtPosition:position];
+        if (self.viewMode == TXWTagViewModeEdit) {
+            if ([self.delegate respondsToSelector:@selector(tagView:addNewtagViewCellTappedAtPosition:)]) {
+                CGPoint position = [touch locationInView:self.tagsContainer];
+                if (!CGRectContainsPoint(self.disableTagArea, position)) {
+                    [self.delegate tagView:self addNewtagViewCellTappedAtPosition:position];
+                }
             }
+            if (self.isShowTagPoint) {
+                CGRect frame = self.pointIV.frame;
+                frame.origin = CGPointMake(point.x-17/2, point.y-17/2);
+                self.pointIV.frame = frame;
+                self.pointIV.hidden = NO;
+                
+            }else{
+                
+                self.pointIV.hidden = YES;
+            }
+            self.isShowTagPoint = !self.isShowTagPoint;
+        }else {
+        
         }
-        if (self.isShowTagPoint) {
-            CGRect frame = self.pointIV.frame;
-            frame.origin = CGPointMake(point.x-17/2, point.y-17/2);
-            self.pointIV.frame = frame;
-            self.pointIV.hidden = NO;
-            
-        }else{
-            
-            self.pointIV.hidden = YES;
-        }
-        self.isShowTagPoint = !self.isShowTagPoint;
+        
     }
     
 }

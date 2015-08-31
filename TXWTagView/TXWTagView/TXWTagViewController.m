@@ -11,6 +11,7 @@
 #import "TXWTagViewCell.h"
 #import "TXWTextTagModel.h"
 #import "TXWTagPopView.h"
+#import "TXWShowPicViewController.h"
 
 #define BUTTON_HEIGHT 60
 #define BUTTON_WIDTH 60
@@ -23,29 +24,47 @@
 @property (assign,nonatomic) CGPoint tagPoint;// 存点击的点
 @property (strong,nonatomic) NSMutableArray *tagArrs;// 存储标签model
 @property (strong,nonatomic) TXWTagView *tagView;
+@property (nonatomic ,assign) NSInteger *tagType;
 @end
 
 @implementation TXWTagViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
+    self.title = @"标签";
     self.isShowTagPoint = YES;
     self.tagView.backgroundImageView.image = [UIImage imageNamed:@"demo"];
     self.tagView.userInteractionEnabled = YES;
     [self.view addSubview:self.tagView];
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageTapAction:)];
-    tap.delegate = self;
-//    [self.tagView addGestureRecognizer:tap];
-    
+    [self initUIBarButtonItem];
     
 }
 
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - private method
+
+- (void)initUIBarButtonItem
+{
+    UIBarButtonItem *item0 = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"big_biaoqian_didian"] style:UIBarButtonItemStylePlain target:self action:@selector(showThePic:)];
+    self.navigationItem.rightBarButtonItem = item0;
+}
+
+- (void)showThePic:(UIBarButtonItem *)sender
+{
+    TXWShowPicViewController *showVc = [TXWShowPicViewController new];
+    showVc.tags = self.tagArrs;
+    showVc.bgImage = [UIImage imageNamed:@"demo"];
+    NSLog(@"showVc.tagArrs = %d",showVc.tags.count);
+//    [self.navigationController pushViewController:showVc animated:YES];
+    [self presentViewController:showVc animated:YES completion:^{
+        
+    }];
+}
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
@@ -143,7 +162,7 @@
     }else{
         [self.alertView show];
     }
-    //
+    self.tagType = 0;
     [self dismissTagPopView];
     self.tagView.isShowTagPoint = YES;
     self.tagView.pointIV.hidden = YES;
@@ -156,7 +175,7 @@
     }else{
         [self.alertView show];
     }
-    //
+    self.tagType = (NSInteger *)1;
     [self dismissTagPopView];
     self.tagView.isShowTagPoint = YES;
     self.tagView.pointIV.hidden = YES;
@@ -175,9 +194,16 @@
             tagModel.text = [nameTF.text isEqualToString:@""]?@"":nameTF.text;
             tagModel.posX = self.tagView.tagPoint.x/self.tagView.frame.size.width;
             tagModel.posY = self.tagView.tagPoint.y/self.tagView.frame.size.height;
-            tagModel.direction = 0;
+            tagModel.tagType = (int)self.tagType;
+            if (tagModel.posX>0.5) {
+                tagModel.direction = 0;
+            }else{
+                tagModel.direction = 1;
+            }
+            
             [self.tagArrs addObject:tagModel];
             [self.tagView reloadData];
+            [self.tagView makeTagItemsAnimated];
         }
     }else if (alertView.tag == 1000){
         [alertView isHidden];
@@ -187,6 +213,7 @@
         }else{
             [self.tagArrs removeObjectAtIndex:alertView.tag];
             [self.tagView reloadData];
+            [self.tagView makeTagItemsAnimated];
         }
     }
 }
@@ -217,6 +244,8 @@
         TXWTextTagModel *misc = self.tagArrs[index];
         [tagViewCell reversetagViewCellDirection];
         misc.direction = tagViewCell.tagViewCellDirection;
+        [self.tagView reloadData];
+        [self.tagView makeTagItemsAnimated];
     }
    
 }
@@ -295,7 +324,7 @@
 - (TXWTagView *)tagView
 {
     if (!_tagView) {
-        _tagView = [[TXWTagView alloc]initWithFrame:CGRectMake(0, 0, 320, 320)];
+        _tagView = [[TXWTagView alloc]initWithFrame:CGRectMake(0, 64, 320, 320)];
         _tagView.dataSource = self;
         _tagView.delegate = self;
     }

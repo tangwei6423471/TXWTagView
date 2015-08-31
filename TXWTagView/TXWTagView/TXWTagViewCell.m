@@ -11,7 +11,7 @@
 
 #define TAGBG_LABEL_PAD 5 // label pad
 #define TYPEICON_TAGBG 8 // icon,tagBg padding
-#define TAG_TYPE_WIDTH 11
+#define TAG_TYPE_WIDTH 12
 #define TAG_BG_HEIGHT 26
 
 #define TAGTYPEICON_TAGBGIV_PADDING 5 // 类型图标和标签背景间距
@@ -33,6 +33,15 @@
 @property (strong,nonatomic) UILabel *tagLabel;
 
 @property (assign, nonatomic) CGSize cachedTagSize;
+
+// animation
+@property (nonatomic,strong) CALayer *imageLayer;
+@property (nonatomic,strong) CALayer *pulsingLayer;
+@property (nonatomic,strong) CALayer *pulsingLayer1;
+
+@property (nonatomic,strong) CAAnimationGroup *iconGroup;
+@property (nonatomic,strong) CAAnimationGroup *pulsingGroup;
+@property (nonatomic,strong) CAAnimationGroup *pulsingGroup1;
 
 @end
 
@@ -139,71 +148,19 @@
     _tagViewCellDirection = tagViewCellDirection;
 }
 
-// alvin 判断边界问题
+// alvin 判断边界问题,设置cell的frame
 - (void)adjustViewFrameWithGivenPositionPercentage:(CGPoint)pointPercentage andContainerSize:(CGSize)size
 {
-//    self.frame = CGRectMake(0, 0, self.tagWidth, self.tagHeight);
-//
-//    CGPoint exactPoint = CGPointMake(pointPercentage.x * size.width, pointPercentage.y * size.height);// 中心点
-////    CGRect cellFrame = CGRectMake(exactPoint.x, exactPoint.y, self.tagWidth, self.tagHeight);
-//    //左边标签超出边界
-//    if (exactPoint.x - self.tagWidth * self.layer.anchorPoint.x < 0) {
-//        exactPoint.x = self.tagWidth * self.layer.anchorPoint.x;
-//    }
-//    //右边标签超出边界
-//    if (exactPoint.x + self.tagWidth * (1 - self.layer.anchorPoint.x) > size.width) {
-//        exactPoint.x = size.width - self.tagWidth * (1 - self.layer.anchorPoint.x);
-//    }
-//    //上边标签超出边界
-//    if (exactPoint.y - self.tagHeight * self.layer.anchorPoint.y < 0) {
-//        exactPoint.y = self.tagHeight * self.layer.anchorPoint.y;
-//    }
-//    //下边标签超出边界
-//    if (exactPoint.y + self.tagHeight * (1 - self.layer.anchorPoint.y) > size.height) {
-//        exactPoint.y = size.height - self.tagHeight * (1 - self.layer.anchorPoint.y);
-//    }
-    
-    // 需要根据方向判断
-    // 解决方法是 位移还是转向
-    
-//    if (self.tagModel.direction == TXWTagViewCellDirectionLeft) {
-//        exactPoint.x -= self.tagWidth/2;
-//        //左边标签超出边界
-//        if (exactPoint.x - self.tagWidth < 0) {
-//            exactPoint.x = self.tagWidth;
-//        }
-//        //右边标签超出边界
-//        if (exactPoint.x > size.width) {
-//            exactPoint.x = size.width;
-//        }
-//    }else{
-//        exactPoint.x += self.tagWidth/2;
-//        //左边标签超出边界
-//        if (exactPoint.x < 0) {
-//            exactPoint.x = 0;
-//        }
-//        //右边标签超出边界
-//        if (exactPoint.x + self.tagWidth > size.width) {
-//            exactPoint.x = size.width - self.tagWidth;
-//        }
-//    }
-//
-//    
-//    //上边标签超出边界
-//    if (exactPoint.y - self.tagHeight / 2 < 0) {
-//        exactPoint.y = self.tagHeight / 2;
-//    }
-//    //下边标签超出边界
-//    if (exactPoint.y + self.tagHeight/2 > size.height) {
-//        exactPoint.y = size.height - self.tagHeight/2;
-//    }
-    
-//    self.layer.position = exactPoint;
-//    self.frame = cellFrame;
+
     
     self.frame = CGRectMake(0, 0, self.tagWidth, self.tagHeight);
-//    CGPoint exactPoint = CGPointMake(pointPercentage.x * size.width-self.tagWidth/2, pointPercentage.y * size.height);
-    CGPoint exactPoint = CGPointMake(self.tagModel.posX * size.width-self.tagWidth/2, self.tagModel.posY * size.height);
+    // 把传过来的点转换计算成center点
+    CGPoint exactPoint;
+    if (self.tagModel.direction == TXWTagViewCellDirectionLeft) {
+        exactPoint = CGPointMake(self.tagModel.posX * size.width-self.tagWidth/2+TAG_TYPE_WIDTH/2, self.tagModel.posY * size.height);
+    }else{
+        exactPoint = CGPointMake(self.tagModel.posX * size.width+self.tagWidth/2-TAG_TYPE_WIDTH/2, self.tagModel.posY * size.height);
+    }
     
     //左边标签超出边界
     if (exactPoint.x - self.tagWidth * self.layer.anchorPoint.x < 0) {
@@ -231,7 +188,7 @@
 - (void)reversetagViewCellDirection
 {
     CGPoint currentCenter = self.center;
-    CGFloat offsetLength = self.tagWidth - 11.0f;// 类型图片宽度
+    CGFloat offsetLength = self.tagWidth - TAG_TYPE_WIDTH;// 类型图片宽度
     CGPoint newCenter = currentCenter;
     if (self.tagModel.direction == TXWTagViewCellDirectionLeft) {
         self.tagViewCellDirection = TXWTagViewCellDirectionRight;
@@ -254,12 +211,13 @@
 - (BOOL)checkCanReversetagViewCellDirectionWithContainerSize:(CGSize)size
 {
     if (self.tagModel.direction == TXWTagViewCellDirectionRight) {
-        if (self.frame.origin.x < self.tagWidth-TAG_TYPE_WIDTH/2) {
+        if (self.frame.origin.x < self.tagWidth-TAG_TYPE_WIDTH) {
             return NO;
         }
         return YES;
     } else {
-        if (size.width - self.frame.origin.x - self.tagWidth < self.tagWidth-TAG_TYPE_WIDTH/2) {
+        if (size.width - self.frame.origin.x - self.tagWidth < self.tagWidth-TAG_TYPE_WIDTH) {
+            NSLog( @"self.frame.origin.x = %f,self.tagWidth = %f",self.frame.origin.x,self.tagWidth);
             return NO;
         }
         return YES;
@@ -268,37 +226,135 @@
 
 - (void)runAnimation
 {
-//    //设置旋转点 根据资源图片计算得出
-//    CGPoint newAnchorPoint = CGPointMake(0.61, 0.19);
-//    self.tagImageView.layer.anchorPoint = newAnchorPoint;
-//    //移动到正确的位置
-//    CGSize imageViewSize = CGSizeMake(self.tagHeight, self.tagHeight);
-//    self.tagImageView.transform = CGAffineTransformMakeTranslation((newAnchorPoint.x - 0.5) * imageViewSize.width, (newAnchorPoint.y - 0.5) * imageViewSize.height);
-//    
-//    //关键帧动画
-//    CALayer *layer = self.tagImageView.layer;
-//    CAKeyframeAnimation *animation;
-//    animation = [CAKeyframeAnimation animationWithKeyPath:@"transform.rotation.z"];
-//    animation.duration = 1.0f;
-//    animation.cumulative = YES;
-//    animation.repeatCount = INFINITY;
-//    animation.values = @[
-//                         @(0.0f),
-//                         @(-M_PI / 5),
-//                         @(-M_PI / 3),
-//                         @(-M_PI / 5),
-//                         @(0.0f)
-//                         ];
-//    animation.timingFunctions = @[
-//                                  [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn],
-//                                  [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut],
-//                                  [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn],
-//                                  [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]
-//                                  ];
-//    animation.removedOnCompletion = NO;
-//    animation.fillMode = kCAFillModeForwards;
-//    
-//    [layer addAnimation:animation forKey:@"tagViewCellRotate"];
+
+    switch (self.tagModel.tagType) {
+        case 0:
+            self.tagTypeIV.image = [UIImage imageNamed:@"big_biaoqian_dian"];
+            break;
+        case 1:
+            self.tagTypeIV.image = [UIImage imageNamed:@"big_biaoqian_didian"];
+            break;
+        case 2:
+            self.tagTypeIV.image = [UIImage imageNamed:@"big_biaoqian_ren"];
+            break;
+        default:
+            break;
+    }
+
+    // icon 放大缩小
+    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    animation.fromValue = @1;
+    animation.toValue = @0.8;
+    animation.duration = 0.2;
+    
+    CABasicAnimation *animation1 = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    animation1.fromValue = @0.8;
+    animation1.toValue = @1.2;
+    animation1.duration = 0.4;
+    animation1.beginTime = animation.duration;
+    
+    CABasicAnimation *animation2 = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    animation2.fromValue = @1.2;
+    animation2.toValue = @1;
+    animation2.duration = 0.2;
+    animation2.beginTime = animation.duration + animation1.duration;
+    
+    CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
+    animationGroup.duration = animation.duration + animation1.duration + animation2.duration + 0.1;
+    animationGroup.repeatCount = 0;
+    animationGroup.delegate = self; // 动画开始结束方法
+    animationGroup.animations = @[animation,animation1,animation2];
+    [animationGroup setValue:@"icon" forKey:@"animationName"];
+    self.iconGroup = animationGroup;
+    
+    self.pulsingLayer = [self addPulsingLayer];
+    [self.layer addSublayer:self.pulsingLayer];
+    
+    self.pulsingLayer1 = [self addPulsingLayer];
+    [self.layer addSublayer: self.pulsingLayer1];
+    
+    self.pulsingGroup = [self addPulsingAnimationGroup:1];
+    [self.pulsingGroup setValue:@"pulse" forKey:@"animationName"];
+    
+    self.pulsingGroup1 = [self addPulsingAnimationGroup:0.8];
+    [self.pulsingGroup1 setValue:@"pulse1" forKey:@"animationName"];
+    
+    CALayer *imageLayer = [CALayer layer];
+    if (self.tagModel.direction == TXWTagViewCellDirectionRight) {
+        imageLayer.frame = CGRectMake(0, (self.frame.size.height - TAG_TYPE_WIDTH) / 2, TAG_TYPE_WIDTH , TAG_TYPE_WIDTH);
+    }else{
+        imageLayer.frame = CGRectMake((self.frame.size.width - TAG_TYPE_WIDTH), (self.frame.size.height - TAG_TYPE_WIDTH) / 2, TAG_TYPE_WIDTH , TAG_TYPE_WIDTH);
+    }
+
+    imageLayer.contents = (__bridge id)(self.tagTypeIV.image.CGImage);
+    [self.layer addSublayer:imageLayer];
+    self.imageLayer = imageLayer;
+    
+    [imageLayer addAnimation:animationGroup forKey:@"icon"];
+}
+
+-(CALayer *)addPulsingLayer{
+    CALayer *pulsingLayer = [CALayer layer];
+    pulsingLayer.bounds = CGRectMake(0, 0, self.frame.size.height, self.frame.size.height);
+    if (self.tagModel.direction == TXWTagViewCellDirectionLeft) {
+        pulsingLayer.position = CGPointMake(self.frame.size.width-TAG_TYPE_WIDTH/2, self.bounds.size.height/2);
+    }else {
+        pulsingLayer.position = CGPointMake(TAG_TYPE_WIDTH/2, self.bounds.size.height/2);
+    }
+    
+    pulsingLayer.contentsScale = [UIScreen mainScreen].scale;
+    pulsingLayer.backgroundColor = [UIColor blackColor].CGColor;
+    pulsingLayer.cornerRadius = self.frame.size.height/2;
+    pulsingLayer.opacity = 0;
+    return pulsingLayer;
+}
+
+-(CAAnimationGroup *)addPulsingAnimationGroup:(CFTimeInterval)duration{
+    CABasicAnimation *animation3 = [CABasicAnimation animationWithKeyPath:@"transform.scale.xy"];
+    animation3.fromValue = @0.0;
+    animation3.toValue = @1.0;
+    animation3.duration = duration;
+    
+    CAKeyframeAnimation *animation4 = [CAKeyframeAnimation animationWithKeyPath:@"opacity"];
+    animation4.duration =duration ;
+    animation4.values = @[@0.8, @0.45, @0];
+    animation4.keyTimes = @[@0, @0.2, @1];
+    
+    CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
+    animationGroup.duration =  duration;
+    animationGroup.repeatCount = 0;
+    animationGroup.delegate = self;// 动画开始结束方法
+    animationGroup.animations = @[animation3,animation4];
+    
+    return animationGroup;
+}
+
+#pragma mark - CAAnimationDelegate
+- (void)animationDidStart:(CAAnimation *)animation{
+
+    NSString *animationName = [animation valueForKey:@"animationName"];
+    if ([animationName  isEqualToString:@"pulse"]) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * self.pulsingGroup.duration  * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self.pulsingLayer1 addAnimation:self.pulsingGroup1 forKey:@"pulse1"];
+        });
+    }
+}
+
+- (void)animationDidStop:(CAAnimation *)animation finished:(BOOL)finished
+{
+    if (finished) {
+        NSString *animationName = [animation valueForKey:@"animationName"];
+        
+        if ([animationName isEqualToString:@"icon"]) {
+            [self.imageLayer removeAnimationForKey:@"icon"];
+            [self.pulsingLayer addAnimation:self.pulsingGroup forKey:@"pulse"];
+        }else if ([animationName isEqualToString:@"pulse"]){
+            [self.pulsingLayer removeAnimationForKey:@"pulse"];
+        }else if ([animationName isEqualToString:@"pulse1"]){
+            [self.pulsingLayer1 removeAnimationForKey:@"pulse1"];
+            [self.imageLayer addAnimation:self.iconGroup forKey:@"icon"];
+        }
+    }
 }
 
 #pragma mark - Override Methods
@@ -311,8 +367,19 @@
     CGRect TagBgImageViewframe = self.tagIV.frame;
     CGRect TagTypeImageViewframe = self.tagTypeIV.frame;
     CGRect TagLabelframe = self.tagLabel.frame;
-    
-    self.tagTypeIV.image = [UIImage imageNamed:@"big_biaoqian_dian"];
+//    switch (self.tagModel.tagType) {
+//        case 0:
+//            self.tagTypeIV.image = [UIImage imageNamed:@"big_biaoqian_dian"];
+//            break;
+//        case 1:
+//            self.tagTypeIV.image = [UIImage imageNamed:@"big_biaoqian_didian"];
+//            break;
+//        case 2:
+//            self.tagTypeIV.image = [UIImage imageNamed:@"big_biaoqian_ren"];
+//            break;
+//        default:
+//            break;
+//    }
     
     if (self.tagModel.direction == TXWTagViewCellDirectionLeft) {
 

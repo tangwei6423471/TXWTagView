@@ -70,15 +70,15 @@
     
 }
 
-- (void)imageTapAction:(UITapGestureRecognizer *)tap
-{
-    if (self.isShowTagPoint) {
-
-        [self showTagPopView];
-    }else{
-        [self dismissTagPopView];
-    }
-}
+//- (void)imageTapAction:(UITapGestureRecognizer *)tap
+//{
+//    if (self.isShowTagPoint) {
+//
+//        [self showTagPopView];
+//    }else{
+//        [self dismissTagPopView];
+//    }
+//}
 
 - (void)showTagPopView
 {

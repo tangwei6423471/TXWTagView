@@ -43,7 +43,7 @@ typedef NS_ENUM(NSInteger, TXWTagViewCellDirection) {
 /**
  *  设置tag的锚点（layer.anchorPoint），即在图片上固定位置的点，所有的动画都是基于这个点的.
  */
-- (void)configAdjustAnchorPoint;
+//- (void)configAdjustAnchorPoint;
 
 /**
  *  根据指定的x，y百分比值，以及给定容器的size，计算tag的显示位置，这里设置layer.position即可，这里要保证view的frame已经存在，并且layer.anchorPoint已经被正确设置。PS:方法中应该实现，如果指定的位置放不下tag的处理方案，转向还是移动。

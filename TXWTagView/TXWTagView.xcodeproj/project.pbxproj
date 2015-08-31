@@ -21,6 +21,7 @@
 		BA3AE4C31B8B0295007BAD59 /* APLocationModel.m in Sources */ = {isa = PBXBuildFile; fileRef = BA3AE4C21B8B0295007BAD59 /* APLocationModel.m */; };
 		BA3AE4C61B8B029D007BAD59 /* TXWTextTagModel.m in Sources */ = {isa = PBXBuildFile; fileRef = BA3AE4C51B8B029D007BAD59 /* TXWTextTagModel.m */; };
 		BA3AE4D81B8B088A007BAD59 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA3AE4D71B8B088A007BAD59 /* CoreGraphics.framework */; };
+		BA4E735D1B9402E100E54F62 /* TXWShowPicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BA4E735C1B9402E100E54F62 /* TXWShowPicViewController.m */; };
 		BAEB4DFB1B8D55B7007F7EAE /* UIImage+rotate.m in Sources */ = {isa = PBXBuildFile; fileRef = BAEB4DFA1B8D55B7007F7EAE /* UIImage+rotate.m */; };
 		BAEB4E1F1B8D9D45007F7EAE /* MASCompositeConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = BAEB4DFD1B8D9D45007F7EAE /* MASCompositeConstraint.m */; };
 		BAEB4E201B8D9D45007F7EAE /* MASConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = BAEB4DFF1B8D9D45007F7EAE /* MASConstraint.m */; };
@@ -80,6 +81,8 @@
 		BA3AE4C41B8B029D007BAD59 /* TXWTextTagModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TXWTextTagModel.h; sourceTree = "<group>"; };
 		BA3AE4C51B8B029D007BAD59 /* TXWTextTagModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TXWTextTagModel.m; sourceTree = "<group>"; };
 		BA3AE4D71B8B088A007BAD59 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		BA4E735B1B9402E100E54F62 /* TXWShowPicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TXWShowPicViewController.h; sourceTree = "<group>"; };
+		BA4E735C1B9402E100E54F62 /* TXWShowPicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TXWShowPicViewController.m; sourceTree = "<group>"; };
 		BAEB4DF91B8D55B7007F7EAE /* UIImage+rotate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+rotate.h"; sourceTree = "<group>"; };
 		BAEB4DFA1B8D55B7007F7EAE /* UIImage+rotate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+rotate.m"; sourceTree = "<group>"; };
 		BAEB4DFC1B8D9D45007F7EAE /* MASCompositeConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASCompositeConstraint.h; sourceTree = "<group>"; };
@@ -174,6 +177,8 @@
 				BA3AE4981B8B0227007BAD59 /* ViewController.m */,
 				BAEB4E371B8DAEE7007F7EAE /* TXWTagViewController.h */,
 				BAEB4E381B8DAEE7007F7EAE /* TXWTagViewController.m */,
+				BA4E735B1B9402E100E54F62 /* TXWShowPicViewController.h */,
+				BA4E735C1B9402E100E54F62 /* TXWShowPicViewController.m */,
 				BA3AE49A1B8B0227007BAD59 /* Main.storyboard */,
 				BA3AE4B61B8B025D007BAD59 /* APOpenTagView.h */,
 				BA3AE4BB1B8B0285007BAD59 /* APAudioTagModel.h */,
@@ -403,6 +408,7 @@
 				BAEB4E2C1B8D9D45007F7EAE /* WTTagViewItem.m in Sources */,
 				BAEB4E2D1B8D9D45007F7EAE /* WTTagViewMItem.m in Sources */,
 				BA3AE4961B8B0227007BAD59 /* TXWAppDelegate.m in Sources */,
+				BA4E735D1B9402E100E54F62 /* TXWShowPicViewController.m in Sources */,
 				BAEB4E271B8D9D45007F7EAE /* View+MASAdditions.m in Sources */,
 				BAEB4E261B8D9D45007F7EAE /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
 				BAEB4E221B8D9D45007F7EAE /* MASLayoutConstraint.m in Sources */,
