@@ -7,6 +7,7 @@
 //
 
 #import "TXWTagPopView.h"
+#import "TXWTagViewHelper.h"
 #define BUTTON_HEIGHT 60
 #define BUTTON_WIDTH 60
 #define MARGIN_BUTTON 50
@@ -20,7 +21,6 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-//        [superView addSubview:self];
         [self initButtonView];
     }
     
@@ -29,11 +29,8 @@
 
 - (void)initButtonView
 {
-
     [self addSubview:self.textButton];
     [self addSubview:self.locationButton];
-//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapPopViewAction:)];
-//    [self addGestureRecognizer:tap];
 }
 
 #pragma mark - UITapGestureRecognizer
@@ -70,7 +67,7 @@
         _textButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _textButton.backgroundColor = [UIColor clearColor];
         _textButton.frame = CGRectMake(MARGIN_BUTTON,0, BUTTON_WIDTH, BUTTON_WIDTH);
-        [_textButton setImage:[UIImage imageNamed:@"Filter_icon_brand"] forState:UIControlStateNormal];
+        [_textButton setImage:[UIImage imageNamed:[TXWTagViewHelper tagPopViewButtonImageTypeNomal]] forState:UIControlStateNormal];
         [_textButton addTarget:_delegate action:@selector(didTextTagViewClicked) forControlEvents:UIControlEventTouchUpInside];
     }
     return _textButton;
@@ -82,7 +79,7 @@
     if (!_locationButton) {
         _locationButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _locationButton.frame = CGRectMake(self.frame.size.width-BUTTON_WIDTH-MARGIN_BUTTON, 0, BUTTON_WIDTH, BUTTON_WIDTH);
-        [_locationButton setImage:[UIImage imageNamed:@"Filter_icon_Location"] forState:UIControlStateNormal];
+        [_locationButton setImage:[UIImage imageNamed:[TXWTagViewHelper tagPopViewButtonImageTypeLocation]] forState:UIControlStateNormal];
         [_locationButton addTarget:_delegate action:@selector(didLocationTagViewClicked) forControlEvents:UIControlEventTouchUpInside];
     }
     return _locationButton;

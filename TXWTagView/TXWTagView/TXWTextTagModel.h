@@ -16,15 +16,7 @@ typedef enum : NSUInteger {
     kTagPeople,
 } TagType;
 
-/*
- 
- "imgKey": 5,
- "posX": 10,
- "posY": 20,
- "ID": 5,
- "text": "????",
- "direction": 1
- */
+
 
 @interface TXWTextTagModel : NSObject
 

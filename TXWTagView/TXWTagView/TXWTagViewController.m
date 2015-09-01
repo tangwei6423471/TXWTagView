@@ -248,7 +248,7 @@
    
 }
 
-//editMode
+// editMode
 - (void)tagView:(TXWTagView *)tagView tagViewCell:(UIView<TXWTagViewCellDelegate> *)tagViewCell didChangedDirection:(TXWTagViewCellDirection)tagViewCellDirection AtIndex:(NSInteger)index
 {
     TXWTextTagModel *misc = self.tagArrs[index];

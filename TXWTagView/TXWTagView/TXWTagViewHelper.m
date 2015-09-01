@@ -19,8 +19,17 @@
     return systemMajorVersion >= 8;
 }
 
-+ (NSString *)tagIconName {
++ (NSString *)tagIconImageNameTypeNomal
+{
     return @"big_biaoqian_dian";
+}
++ (NSString *)tagIconImageNameTypeLocation
+{
+    return @"big_biaoqian_didian";
+}
++ (NSString *)tagIconImageNameTypePeople
+{
+    return @"big_biaoqian_ren";
 }
 
 + (NSString *)tagLeftBgImageName {
@@ -29,5 +38,18 @@
 
 + (NSString *)tagRightBgImageName {
     return @"tagViewBg_right";
+}
+
++ (NSString *)tagPopViewButtonImageTypeNomal
+{
+    return @"Filter_icon_brand";
+}
++ (NSString *)tagPopViewButtonImageTypePeople
+{
+    return @"KK_Brand_Tag_point_black";
+}
++ (NSString *)tagPopViewButtonImageTypeLocation
+{
+    return @"Filter_icon_Location";
 }
 @end

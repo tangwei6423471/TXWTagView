@@ -24,7 +24,7 @@ typedef NS_ENUM(NSInteger, TXWTagViewMode) {
 
 typedef NS_ENUM(NSInteger, TXWTagViewCellDirection) {
     TXWTagViewCellDirectionLeft = 0,
-    TXWTagViewCellDirectionRight = 1,// 默认
+    TXWTagViewCellDirectionRight = 1,
 };
 
 #pragma mark - TXWTagViewCellDelegate
@@ -40,10 +40,6 @@ typedef NS_ENUM(NSInteger, TXWTagViewCellDirection) {
 @property (assign, nonatomic) TXWTagViewCellDirection tagViewCellDirection;
 @property (assign, nonatomic) NSInteger containerCountIndex;// 计数
 
-/**
- *  设置tag的锚点（layer.anchorPoint），即在图片上固定位置的点，所有的动画都是基于这个点的.
- */
-//- (void)configAdjustAnchorPoint;
 
 /**
  *  根据指定的x，y百分比值，以及给定容器的size，计算tag的显示位置，这里设置layer.position即可，这里要保证view的frame已经存在，并且layer.anchorPoint已经被正确设置。PS:方法中应该实现，如果指定的位置放不下tag的处理方案，转向还是移动。
@@ -98,7 +94,7 @@ typedef NS_ENUM(NSInteger, TXWTagViewCellDirection) {
 @interface TXWTagView : UIView
 @property (strong, nonatomic) UIImageView *backgroundImageView;
 
-//更换了模式，必须调用reloadData才能生效
+// 更换了模式，必须调用reloadData才能生效
 @property (assign, nonatomic) IBInspectable NSInteger viewMode;
 @property (assign,nonatomic) BOOL isShowTagPoint;// 点击那里显示点
 @property (strong,nonatomic) UIImageView *pointIV;// 点击标示的点图
@@ -113,18 +109,16 @@ typedef NS_ENUM(NSInteger, TXWTagViewCellDirection) {
 
 - (instancetype)initWithFrame:(CGRect)frame;
 
-//会废弃以前的tagViewCell,从dataSouse重新获取
+// 会废弃以前的tagViewCell,从dataSouse重新获取
 - (void)reloadData;
 
 //非编辑模式下启用
-- (void)hideTagItems;
-- (void)showTagItems;
-- (void)makeTagItemsAnimated;
-/*
- frame:imageview
- isEdit:编辑状态可以删除，修改方向(如果有人物链接，不可点击)；非编辑状态不能操作，只能查看(如果有人物链接，可点击跳转)
+- (void)hideTagItems;// 隐藏
+- (void)showTagItems;// 显示
+/**
+ *  播放动画
  */
-//- (instancetype)initWithModel:(id)model frame:(CGRect)frame isEditState:(BOOL)isEdit;
+- (void)makeTagItemsAnimated;
 
 
 @end

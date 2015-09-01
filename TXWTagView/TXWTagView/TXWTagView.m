@@ -7,7 +7,7 @@
 //
 
 #import "TXWTagView.h"
-#import "UIImage+rotate.h"
+
 #define TAG_TYPE_WIDTH 12
 #define TAG_POINT_IMAGEVIEW_W_H 17
 

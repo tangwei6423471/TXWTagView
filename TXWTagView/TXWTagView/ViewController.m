@@ -31,13 +31,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.tagArrs = [NSMutableArray arrayWithCapacity:MAX_TAG_COUNT];
-    self.isShowTagPoint = YES;
-    self.imageVIew.image = [UIImage imageNamed:@"demo"];
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageTapAction:)];
-    tap.delegate = self;
-    self.imageVIew.userInteractionEnabled = YES;
-    [self.imageVIew addGestureRecognizer:tap];
+//    self.tagArrs = [NSMutableArray arrayWithCapacity:MAX_TAG_COUNT];
+//    self.isShowTagPoint = YES;
+//    self.imageVIew.image = [UIImage imageNamed:@"demo"];
+//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageTapAction:)];
+//    tap.delegate = self;
+//    self.imageVIew.userInteractionEnabled = YES;
+//    [self.imageVIew addGestureRecognizer:tap];
     
 }
 
@@ -45,7 +45,7 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
+/*
 #pragma mark - private method
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -212,5 +212,5 @@
     return YES;// 支持多手势
 }
 
-
+*/
 @end

@@ -18,7 +18,7 @@
 #define TAGLABEL_LEFT_X 3
 #define TAGLABEL_RIGHT_X 10
 #define TAG_ARROW_WIDTH 8
-
+#define TAG_MIN_WIDTH 28
 
 @interface TXWTagViewCell ()
 
@@ -46,6 +46,10 @@
 @end
 
 @implementation TXWTagViewCell
+
+@synthesize centerPointPercentage = _centerPointPercentage;
+@synthesize containerCountIndex = _containerCountIndex;
+@synthesize tagViewCellDirection = _tagViewCellDirection;
 
 - (instancetype)init
 {
@@ -85,7 +89,6 @@
     if (CGSizeEqualToSize(_cachedTagSize, CGSizeZero)) {
 
         _cachedTagSize = CGSizeMake([self widthByStr:self.tagModel.text]+TAG_ARROW_WIDTH+TAGBG_LABEL_PAD+TAG_TYPE_WIDTH+TAGTYPEICON_TAGBGIV_PADDING, TAG_BG_HEIGHT);
-        
     }
     return _cachedTagSize;
 }
@@ -124,9 +127,6 @@
 
 #pragma mark - public method
 
-@synthesize centerPointPercentage = _centerPointPercentage;
-@synthesize containerCountIndex = _containerCountIndex;
-@synthesize tagViewCellDirection = _tagViewCellDirection;
 
 - (CGSize)tagSize
 {
@@ -151,8 +151,6 @@
 // alvin 判断边界问题,设置cell的frame
 - (void)adjustViewFrameWithGivenPositionPercentage:(CGPoint)pointPercentage andContainerSize:(CGSize)size
 {
-
-    
     self.frame = CGRectMake(0, 0, self.tagWidth, self.tagHeight);
     // 把传过来的点转换计算成center点
     CGPoint exactPoint;
@@ -217,7 +215,6 @@
         return YES;
     } else {
         if (size.width - self.frame.origin.x - self.tagWidth < self.tagWidth-TAG_TYPE_WIDTH) {
-            NSLog( @"self.frame.origin.x = %f,self.tagWidth = %f",self.frame.origin.x,self.tagWidth);
             return NO;
         }
         return YES;
@@ -226,16 +223,15 @@
 
 - (void)runAnimation
 {
-
     switch (self.tagModel.tagType) {
         case 0:
-            self.tagTypeIV.image = [UIImage imageNamed:@"big_biaoqian_dian"];
+            self.tagTypeIV.image = [UIImage imageNamed:[TXWTagViewHelper tagIconImageNameTypeNomal]];
             break;
         case 1:
-            self.tagTypeIV.image = [UIImage imageNamed:@"big_biaoqian_didian"];
+            self.tagTypeIV.image = [UIImage imageNamed:[TXWTagViewHelper tagIconImageNameTypeLocation]];
             break;
         case 2:
-            self.tagTypeIV.image = [UIImage imageNamed:@"big_biaoqian_ren"];
+            self.tagTypeIV.image = [UIImage imageNamed:[TXWTagViewHelper tagIconImageNameTypePeople]];
             break;
         default:
             break;
@@ -293,7 +289,8 @@
     [imageLayer addAnimation:animationGroup forKey:@"icon"];
 }
 
--(CALayer *)addPulsingLayer{
+-(CALayer *)addPulsingLayer
+{
     CALayer *pulsingLayer = [CALayer layer];
     pulsingLayer.bounds = CGRectMake(0, 0, self.frame.size.height, self.frame.size.height);
     if (self.tagModel.direction == TXWTagViewCellDirectionLeft) {
@@ -309,7 +306,8 @@
     return pulsingLayer;
 }
 
--(CAAnimationGroup *)addPulsingAnimationGroup:(CFTimeInterval)duration{
+-(CAAnimationGroup *)addPulsingAnimationGroup:(CFTimeInterval)duration
+{
     CABasicAnimation *animation3 = [CABasicAnimation animationWithKeyPath:@"transform.scale.xy"];
     animation3.fromValue = @0.0;
     animation3.toValue = @1.0;
@@ -330,7 +328,8 @@
 }
 
 #pragma mark - CAAnimationDelegate
-- (void)animationDidStart:(CAAnimation *)animation{
+- (void)animationDidStart:(CAAnimation *)animation
+{
 
     NSString *animationName = [animation valueForKey:@"animationName"];
     if ([animationName  isEqualToString:@"pulse"]) {
@@ -367,19 +366,6 @@
     CGRect TagBgImageViewframe = self.tagIV.frame;
     CGRect TagTypeImageViewframe = self.tagTypeIV.frame;
     CGRect TagLabelframe = self.tagLabel.frame;
-//    switch (self.tagModel.tagType) {
-//        case 0:
-//            self.tagTypeIV.image = [UIImage imageNamed:@"big_biaoqian_dian"];
-//            break;
-//        case 1:
-//            self.tagTypeIV.image = [UIImage imageNamed:@"big_biaoqian_didian"];
-//            break;
-//        case 2:
-//            self.tagTypeIV.image = [UIImage imageNamed:@"big_biaoqian_ren"];
-//            break;
-//        default:
-//            break;
-//    }
     
     if (self.tagModel.direction == TXWTagViewCellDirectionLeft) {
 
@@ -417,8 +403,8 @@
         y = 12;
     }
     
-    if (y<28) {
-        y=28;
+    if (y<TAG_MIN_WIDTH) {
+        y=TAG_MIN_WIDTH;
     }
     
     return y;
