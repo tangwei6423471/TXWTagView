@@ -9,6 +9,7 @@
 #import "TXWTagView.h"
 #import "UIImage+rotate.h"
 #define TAG_TYPE_WIDTH 12
+#define TAG_POINT_IMAGEVIEW_W_H 17
 
 @interface TXWTagView()<UIGestureRecognizerDelegate>
 @property (strong,nonatomic) UIImageView *tagTypeIV;
@@ -344,7 +345,7 @@
             }
             if (self.isShowTagPoint) {
                 CGRect frame = self.pointIV.frame;
-                frame.origin = CGPointMake(point.x-17/2, point.y-17/2);
+                frame.origin = CGPointMake(point.x-TAG_POINT_IMAGEVIEW_W_H/2, point.y-TAG_POINT_IMAGEVIEW_W_H/2);
                 self.pointIV.frame = frame;
                 self.pointIV.hidden = NO;
                 
@@ -374,7 +375,7 @@
             }
             if (self.isShowTagPoint) {
                 CGRect frame = self.pointIV.frame;
-                frame.origin = CGPointMake(point.x-17/2, point.y-17/2);
+                frame.origin = CGPointMake(point.x-TAG_POINT_IMAGEVIEW_W_H/2, point.y-TAG_POINT_IMAGEVIEW_W_H/2);
                 self.pointIV.frame = frame;
                 self.pointIV.hidden = NO;
                 
@@ -397,7 +398,7 @@
     
     if (!_pointIV) {
         _pointIV = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"KK_Filter_hover"]];
-        _pointIV.frame= CGRectMake(0, 0, 17, 17);
+        _pointIV.frame= CGRectMake(0, 0, TAG_POINT_IMAGEVIEW_W_H, TAG_POINT_IMAGEVIEW_W_H);
         [self addSubview:_pointIV];
     }
     return _pointIV;
