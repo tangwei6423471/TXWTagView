@@ -228,10 +228,10 @@
             self.tagTypeIV.image = [UIImage imageNamed:[TXWTagViewHelper tagIconImageNameTypeNomal]];
             break;
         case 1:
-            self.tagTypeIV.image = [UIImage imageNamed:[TXWTagViewHelper tagIconImageNameTypeLocation]];
+            self.tagTypeIV.image = [UIImage imageNamed:[TXWTagViewHelper tagIconImageNameTypePeople]];
             break;
         case 2:
-            self.tagTypeIV.image = [UIImage imageNamed:[TXWTagViewHelper tagIconImageNameTypePeople]];
+            self.tagTypeIV.image = [UIImage imageNamed:[TXWTagViewHelper tagIconImageNameTypeLocation]];
             break;
         default:
             break;

@@ -175,7 +175,7 @@
     self.tagView.pointIV.hidden = YES;
 }
 
-- (void)didLocationTagViewClicked
+- (void)didPeopleTagViewClicked
 {
     if (self.tagArrs.count>=MAX_TAG_COUNT) {
         [[[UIAlertView alloc]initWithTitle:nil message:[NSString stringWithFormat:@"最多可添加%d条标签",MAX_TAG_COUNT] delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil] show];

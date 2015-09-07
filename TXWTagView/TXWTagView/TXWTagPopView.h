@@ -23,5 +23,6 @@
 @optional
 - (void)didTextTagViewClicked;
 - (void)didLocationTagViewClicked;
+- (void)didPeopleTagViewClicked;
 - (void)tapTagPopView;
 @end

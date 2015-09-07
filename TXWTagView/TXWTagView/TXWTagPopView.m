@@ -86,8 +86,8 @@
     if (!_locationButton) {
         _locationButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _locationButton.frame = CGRectMake(self.frame.size.width-BUTTON_WIDTH-MARGIN_BUTTON, 0, BUTTON_WIDTH, BUTTON_WIDTH);
-        [_locationButton setImage:[UIImage imageNamed:[TXWTagViewHelper tagPopViewButtonImageTypeLocation]] forState:UIControlStateNormal];
-        [_locationButton addTarget:_delegate action:@selector(didLocationTagViewClicked) forControlEvents:UIControlEventTouchUpInside];
+        [_locationButton setImage:[UIImage imageNamed:[TXWTagViewHelper tagPopViewButtonImageTypePeople]] forState:UIControlStateNormal];
+        [_locationButton addTarget:_delegate action:@selector(didPeopleTagViewClicked) forControlEvents:UIControlEventTouchUpInside];
     }
     return _locationButton;
 }

@@ -46,7 +46,7 @@
 }
 + (NSString *)tagPopViewButtonImageTypePeople
 {
-    return @"KK_Brand_Tag_point_black";
+    return @"Filter_icon_People";
 }
 + (NSString *)tagPopViewButtonImageTypeLocation
 {
