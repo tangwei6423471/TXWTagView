@@ -10,6 +10,8 @@
 
 #define TAG_TYPE_WIDTH 12
 #define TAG_POINT_IMAGEVIEW_W_H 17
+#define kTagViewAspectRatio (320/230.0) // 宽高比
+#define kScreenWidth [[UIScreen mainScreen] bounds].size.width
 
 @interface TXWTagView()<UIGestureRecognizerDelegate>
 @property (strong,nonatomic) UIImageView *tagTypeIV;
@@ -34,6 +36,36 @@
     return self;
 }
 
+// 不规则图片
+- (instancetype)initWithImageFrame:(CGRect)frame offsexY:(CGFloat)offsetY
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        
+        CGFloat ImageAspectRatio = frame.size.width/frame.size.height;
+        CGRect frame = CGRectMake(0, offsetY, kScreenWidth, kScreenWidth);
+        if (ImageAspectRatio == kTagViewAspectRatio) {
+            
+            frame.size.width = kScreenWidth;
+            frame.size.height = kScreenWidth/ImageAspectRatio;
+            
+        }else if (ImageAspectRatio > kTagViewAspectRatio){
+            frame.origin.x = 0;
+            frame.origin.y += (kScreenWidth/kTagViewAspectRatio - kScreenWidth/ImageAspectRatio)/2;
+            frame.size.width = kScreenWidth;
+            frame.size.height = kScreenWidth/ImageAspectRatio;
+        }else{
+            frame.origin.x += (kScreenWidth-(kScreenWidth/kTagViewAspectRatio*ImageAspectRatio))/2;
+            frame.size.height = kScreenWidth/kTagViewAspectRatio;
+            frame.size.width = kScreenWidth/kTagViewAspectRatio*ImageAspectRatio;
+        }
+        self.frame = frame;
+        
+        [self commonInitialize];
+    }
+    return self;
+}
+
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     if (self = [super initWithCoder:aDecoder]) {
@@ -46,7 +78,9 @@
 {
     // Initialization code
     self.isShowTagPoint = YES;
+    NSLog(@"tagView.bounds = %@",NSStringFromCGRect(self.bounds));
     self.backgroundImageView = [[UIImageView alloc] initWithFrame:self.bounds];// 不能用frame
+    self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFit;
     self.backgroundImageView.userInteractionEnabled = YES;
     [self addSubview:self.backgroundImageView];
 
@@ -61,7 +95,7 @@
     tap.delegate = self;
     [self.backgroundImageView addGestureRecognizer:tap];
     
-    self.disableTagArea = CGRectZero;
+    self.disableTagArea = CGRectMake(0, 0, 0, 0);
 }
 
 #pragma mark - Tags Relation Methods
@@ -337,11 +371,15 @@
         if (self.viewMode == TXWTagViewModePreview) {
             [self hideTagItems];
         } else if (self.viewMode == TXWTagViewModeEdit) {
+            
+            CGPoint position = [touch locationInView:self.tagsContainer];
+            if (CGRectContainsPoint(self.disableTagArea, position)) {
+                return;
+            }
+
             if ([self.delegate respondsToSelector:@selector(tagView:addNewtagViewCellTappedAtPosition:)]) {
-                CGPoint position = [touch locationInView:self.tagsContainer];
-                if (!CGRectContainsPoint(self.disableTagArea, position)) {
-                    [self.delegate tagView:self addNewtagViewCellTappedAtPosition:position];
-                }
+                
+                [self.delegate tagView:self addNewtagViewCellTappedAtPosition:position];
             }
             if (self.isShowTagPoint) {
                 CGRect frame = self.pointIV.frame;

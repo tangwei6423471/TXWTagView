@@ -31,38 +31,46 @@
 {
     [self addSubview:self.textButton];
     [self addSubview:self.locationButton];
+    self.backgroundColor = [UIColor clearColor];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapPopViewAction:)];
+    tap.numberOfTapsRequired = 1;
+    tap.numberOfTouchesRequired = 1;
+    self.userInteractionEnabled = YES;
+    [self addGestureRecognizer:tap];
 }
 
 #pragma mark - UITapGestureRecognizer
 - (void)tapPopViewAction:(UIGestureRecognizer *)tap
 {
-    if (self) {
-        self.locationButton.alpha = 1;
-        [UIView animateWithDuration:0.10f animations:^{
-            CGRect frame = self.locationButton.frame;
-            frame.origin.y = 0;
-            self.locationButton.frame = frame;
-            self.locationButton.alpha = 0;
-        }];
-        
-        self.textButton.alpha = 1;
-        [UIView animateWithDuration:0.25f animations:^{
-            CGRect frame = self.textButton.frame;
-            frame.origin.y = 0;
-            self.textButton.frame = frame;
-            self.textButton.alpha = 0;
-        }];
-        
+//    if (self) {
+//        self.locationButton.alpha = 1;
+//        [UIView animateWithDuration:0.10f animations:^{
+//            CGRect frame = self.locationButton.frame;
+//            frame.origin.y = 0;
+//            self.locationButton.frame = frame;
+//            self.locationButton.alpha = 0;
+//        }];
+//        
+//        self.textButton.alpha = 1;
+//        [UIView animateWithDuration:0.25f animations:^{
+//            CGRect frame = self.textButton.frame;
+//            frame.origin.y = 0;
+//            self.textButton.frame = frame;
+//            self.textButton.alpha = 0;
+//        }];
+//        
+//    }
+//
+//    self.hidden = YES;
+    if (_delegate && [_delegate respondsToSelector:@selector(tapTagPopView)]) {
+        [_delegate tapTagPopView];
     }
-
-    self.hidden = YES;
 
 }
 
 #pragma mark - setter
 - (UIButton *)textButton
 {
-
     if (!_textButton) {
         _textButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _textButton.backgroundColor = [UIColor clearColor];
@@ -75,7 +83,6 @@
 
 - (UIButton *)locationButton
 {
-    
     if (!_locationButton) {
         _locationButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _locationButton.frame = CGRectMake(self.frame.size.width-BUTTON_WIDTH-MARGIN_BUTTON, 0, BUTTON_WIDTH, BUTTON_WIDTH);

@@ -13,9 +13,11 @@
 #import "TXWTagPopView.h"
 #import "TXWShowPicViewController.h"
 
+#define kTagViewAspectRatio (320/230.0) // 宽高比
 #define BUTTON_HEIGHT 60
 #define BUTTON_WIDTH 60
 #define MAX_TAG_COUNT 5
+
 @interface TXWTagViewController ()<TXWTagViewDataSource,TXWTagViewDelegate,TXWTagPopViewDelegate,UIGestureRecognizerDelegate>
 @property (strong,nonatomic) TXWTagPopView *tagPopView;
 @property (assign,nonatomic) BOOL isShowTagPoint;// 点击那里显示点
@@ -34,9 +36,15 @@
     [super viewDidLoad];
     self.title = @"标签";
     self.isShowTagPoint = YES;
-    self.tagView.backgroundImageView.image = [UIImage imageNamed:@"demo"];
+    UIImage *image = [UIImage imageNamed:@"demo"];
+
+    CGRect frame = CGRectMake(0, 0, image.size.width, image.size.height);
+    _tagView = [[TXWTagView alloc]initWithImageFrame:frame offsexY:64.0f];
+    _tagView.dataSource = self;
+    _tagView.delegate = self;
+    self.tagView.backgroundImageView.image = image;
     self.tagView.userInteractionEnabled = YES;
-    [self.view addSubview:self.tagView];
+    [self.view addSubview:_tagView];
     [self initUIBarButtonItem];
     
 }
@@ -63,51 +71,52 @@
     [self.navigationController pushViewController:showVc animated:YES];
 
 }
+//
+//- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+//{
+//    NSSet *allTouchs = [event allTouches];
+//    UITouch *touch = [allTouchs anyObject];
+//    CGPoint point = [touch locationInView:touch.view];
+//    
+//    if(!CGRectContainsPoint(self.tagView.frame, point)){return;}// 点不在区域内，return
+//    self.tagPoint = point;
+//    
+//    if (self.isShowTagPoint) {
+//        CGRect frame = self.pointIV.frame;
+//        frame.origin = CGPointMake(point.x-17/2, point.y-17/2);
+//        self.pointIV.frame = frame;
+//        self.pointIV.hidden = NO;
+//        
+//    }else{
+//        
+//        self.pointIV.hidden = YES;
+//    }
+//    
+//}
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    NSSet *allTouchs = [event allTouches];
-    UITouch *touch = [allTouchs anyObject];
-    CGPoint point = [touch locationInView:touch.view];
-    
-    if(!CGRectContainsPoint(self.tagView.frame, point)){return;}// 点不在区域内，return
-    self.tagPoint = point;
-    
-    if (self.isShowTagPoint) {
-        CGRect frame = self.pointIV.frame;
-        frame.origin = CGPointMake(point.x-17/2, point.y-17/2);
-        self.pointIV.frame = frame;
-        self.pointIV.hidden = NO;
-        
-    }else{
-        
-        self.pointIV.hidden = YES;
-    }
-    
-}
-
-- (void)imageTapAction:(UITapGestureRecognizer *)tap
-{
-    if (self.isShowTagPoint) {
-        
-        [self showTagPopView];
-    }else{
-        [self dismissTagPopView];
-    }
-}
+//- (void)imageTapAction:(UITapGestureRecognizer *)tap
+//{
+//    if (self.isShowTagPoint) {
+//        
+//        [self showTagPopView];
+//    }else{
+//        [self dismissTagPopView];
+//    }
+//}
 
 - (void)showTagPopView
 {
     _tagPopView.hidden = NO;
     if (!_tagPopView) {
         CGRect frame;
-        frame.size = CGSizeMake(320, 320);
-        frame.origin = CGPointMake(0,(self.tagView.bounds.size.height-320)/2);
+        frame.size = CGSizeMake(320, 320/kTagViewAspectRatio);
+        frame.origin = CGPointMake(0,0);
         self.tagPopView = [[TXWTagPopView alloc]initWithFrame:frame superView:self.tagView];
+        self.tagPopView.center = self.tagView.center;
     }
     _tagPopView.alpha = 1;
     _tagPopView.delegate = self;
-    [self.tagView addSubview:_tagPopView];
+    [self.view addSubview:_tagPopView];
     
     _tagPopView.locationButton.alpha = 0;
     [UIView animateWithDuration:0.25f animations:^{
@@ -178,6 +187,13 @@
     self.tagView.isShowTagPoint = YES;
     self.tagView.pointIV.hidden = YES;
 
+}
+
+- (void)tapTagPopView
+{
+    [self dismissTagPopView];
+    self.tagView.isShowTagPoint = YES;
+    self.tagView.pointIV.hidden = YES;
 }
 
 #pragma mark - UIAlertViewDelegate
@@ -319,15 +335,15 @@
     return _alertView;
 }
 
-- (TXWTagView *)tagView
-{
-    if (!_tagView) {
-        _tagView = [[TXWTagView alloc]initWithFrame:CGRectMake(0, 64, 320, 320)];
-        _tagView.dataSource = self;
-        _tagView.delegate = self;
-    }
-    return _tagView;
-}
+//- (TXWTagView *)tagView
+//{
+//    if (!_tagView) {
+//        _tagView = [[TXWTagView alloc]initWithFrame:CGRectMake(0, 64, 320, 320)];
+//        _tagView.dataSource = self;
+//        _tagView.delegate = self;
+//    }
+//    return _tagView;
+//}
 
 - (NSMutableArray *)tagArrs
 {

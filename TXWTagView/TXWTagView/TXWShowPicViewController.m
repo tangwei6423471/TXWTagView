@@ -87,7 +87,7 @@
 - (TXWTagView *)tagView
 {
     if (!_tagView) {
-        _tagView = [[TXWTagView alloc]initWithFrame:CGRectMake(0, 64, 320, 320)];
+        _tagView = [[TXWTagView alloc] initWithImageFrame:CGRectMake(0, 0, _bgImage.size.width, _bgImage.size.height) offsexY:64.0];
         _tagView.dataSource = self;
         _tagView.delegate = self;
         _tagView.viewMode = TXWTagViewModePreview;

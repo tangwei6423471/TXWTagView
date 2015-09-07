@@ -108,6 +108,7 @@ typedef NS_ENUM(NSInteger, TXWTagViewCellDirection) {
 @property (assign, nonatomic) CGRect disableTagArea;
 
 - (instancetype)initWithFrame:(CGRect)frame;
+- (instancetype)initWithImageFrame:(CGRect)frame offsexY:(CGFloat)offsetY;
 
 // 会废弃以前的tagViewCell,从dataSouse重新获取
 - (void)reloadData;
