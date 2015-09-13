@@ -7,13 +7,18 @@
 //
 
 #import "TXWTagView.h"
+#import "TXWTagPopView.h"
 
 #define TAG_TYPE_WIDTH 12
 #define TAG_POINT_IMAGEVIEW_W_H 17
-#define kTagViewAspectRatio (320/230.0) // 宽高比
 #define kScreenWidth [[UIScreen mainScreen] bounds].size.width
 
-@interface TXWTagView()<UIGestureRecognizerDelegate>
+// popview animal
+#define BUTTON_HEIGHT 60
+#define BUTTON_WIDTH 60
+#define MARGIN_BUTTON 50
+
+@interface TXWTagView()<UIGestureRecognizerDelegate,TXWTagPopViewDelegate>
 @property (strong,nonatomic) UIImageView *tagTypeIV;
 @property (strong,nonatomic) UIImageView *tagIV;
 @property (strong,nonatomic) UILabel *tagLabel;
@@ -23,13 +28,20 @@
 @property (assign,nonatomic) CGFloat offsetY;
 
 @property (strong, nonatomic) UIView *tagsContainer;
-
+// 201509130615
+@property (nonatomic, assign) CGRect superFrame;// 保存父frame
+@property (nonatomic, assign) CGPoint popViewPoint;//popView的point
+@property (strong,nonatomic) TXWTagPopView *tagPopView;
 @end
 @implementation TXWTagView
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
-    self = [super initWithFrame:frame];
+    CGRect superFrame = frame;
+    superFrame.origin.x = 0;
+    superFrame.origin.y = 0;
+    self.superFrame = superFrame;
+    self = [super initWithFrame:superFrame];
     if (self) {
         [self commonInitialize];
     }
@@ -42,26 +54,26 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        CGFloat ImageAspectRatio = frame.size.width/frame.size.height;
-        CGRect frame = CGRectMake(0, offsetY, kScreenWidth, kScreenWidth);
-        if (ImageAspectRatio == kTagViewAspectRatio) {
-            
-            frame.size.width = kScreenWidth;
-            frame.size.height = kScreenWidth/ImageAspectRatio;
-            
-        }else if (ImageAspectRatio > kTagViewAspectRatio){
-            frame.origin.x = 0;
-            frame.origin.y += (kScreenWidth/kTagViewAspectRatio - kScreenWidth/ImageAspectRatio)/2;
-            frame.size.width = kScreenWidth;
-            frame.size.height = kScreenWidth/ImageAspectRatio;
-        }else{
-            frame.origin.x += (kScreenWidth-(kScreenWidth/kTagViewAspectRatio*ImageAspectRatio))/2;
-            frame.size.height = kScreenWidth/kTagViewAspectRatio;
-            frame.size.width = kScreenWidth/kTagViewAspectRatio*ImageAspectRatio;
-        }
-        self.frame = frame;
-        
-        [self commonInitialize];
+//        CGFloat ImageAspectRatio = frame.size.width/frame.size.height;
+//        CGRect frame = CGRectMake(0, offsetY, kScreenWidth, kScreenWidth);
+//        if (ImageAspectRatio == kTagViewAspectRatio) {
+//            
+//            frame.size.width = kScreenWidth;
+//            frame.size.height = kScreenWidth/ImageAspectRatio;
+//            
+//        }else if (ImageAspectRatio > kTagViewAspectRatio){
+//            frame.origin.x = 0;
+//            frame.origin.y += (kScreenWidth/kTagViewAspectRatio - kScreenWidth/ImageAspectRatio)/2;
+//            frame.size.width = kScreenWidth;
+//            frame.size.height = kScreenWidth/ImageAspectRatio;
+//        }else{
+//            frame.origin.x += (kScreenWidth-(kScreenWidth/kTagViewAspectRatio*ImageAspectRatio))/2;
+//            frame.size.height = kScreenWidth/kTagViewAspectRatio;
+//            frame.size.width = kScreenWidth/kTagViewAspectRatio*ImageAspectRatio;
+//        }
+//        self.frame = frame;
+//        
+//        [self commonInitialize];
     }
     return self;
 }
@@ -386,9 +398,9 @@
                 frame.origin = CGPointMake(point.x-TAG_POINT_IMAGEVIEW_W_H/2, point.y-TAG_POINT_IMAGEVIEW_W_H/2);
                 self.pointIV.frame = frame;
                 self.pointIV.hidden = NO;
-                
+                [self showTagPopView];
             }else{
-                
+
                 self.pointIV.hidden = YES;
             }
             self.isShowTagPoint = !self.isShowTagPoint;
@@ -416,9 +428,9 @@
                 frame.origin = CGPointMake(point.x-TAG_POINT_IMAGEVIEW_W_H/2, point.y-TAG_POINT_IMAGEVIEW_W_H/2);
                 self.pointIV.frame = frame;
                 self.pointIV.hidden = NO;
-                
+                [self showTagPopView];
             }else{
-                
+
                 self.pointIV.hidden = YES;
             }
             self.isShowTagPoint = !self.isShowTagPoint;
@@ -430,10 +442,104 @@
     
 }
 
-#pragma mark - setter
+#pragma mark - TXWTagPopViewDelegate
+- (void)showTagPopView
+{
+    _tagPopView.hidden = NO;
+    if (!_tagPopView) {
+        CGRect frame;
+        frame.size = self.superFrame.size;
+        frame.origin = _popViewPoint;
+        _tagPopView = [[TXWTagPopView alloc]initWithFrame:frame superView:self];
+        _tagPopView.center = self.center;
+        
+        CGRect locationButtonFrame = _tagPopView.locationButton.frame;
+        locationButtonFrame.origin.y = _popViewPoint.y;
+        _tagPopView.locationButton.frame = locationButtonFrame;
+        CGRect textButtonFrame = _tagPopView.textButton.frame;
+        textButtonFrame.origin.y = _popViewPoint.y;
+        _tagPopView.textButton.frame = textButtonFrame;
+    }
+    _tagPopView.alpha = 1;
+    _tagPopView.delegate = self;
+    [self addSubview:_tagPopView];
+    
+    _tagPopView.locationButton.alpha = 0;
+    [UIView animateWithDuration:0.25f animations:^{
+        CGRect locationButtonFrame = _tagPopView.locationButton.frame;
+        locationButtonFrame.origin.y = (self.frame.size.height-BUTTON_WIDTH)/2;
+        _tagPopView.locationButton.frame = locationButtonFrame;
+        _tagPopView.locationButton.alpha = 1;
+    }];
+    
+    _tagPopView.textButton.alpha = 0;
+    [UIView animateWithDuration:0.10f animations:^{
+        CGRect textButtonFrame = _tagPopView.textButton.frame;
+        textButtonFrame.origin.y = (self.frame.size.height-BUTTON_WIDTH)/2;
+        _tagPopView.textButton.frame = textButtonFrame;
+        _tagPopView.textButton.alpha = 1;
+    }];
+
+}
+
+- (void)dismissTagPopView
+{
+    if (_tagPopView) {
+        _tagPopView.locationButton.alpha = 1;
+        [UIView animateWithDuration:0.10f animations:^{
+            CGRect frame1 = _tagPopView.locationButton.frame;
+            frame1.origin.y = _popViewPoint.y;
+            _tagPopView.locationButton.frame = frame1;
+            _tagPopView.locationButton.alpha = 0;
+        }];
+        
+        _tagPopView.textButton.alpha = 1;
+        [UIView animateWithDuration:0.35f animations:^{
+            CGRect frame = _tagPopView.textButton.frame;
+            frame.origin.y = _popViewPoint.y;
+            _tagPopView.textButton.frame = frame;
+            _tagPopView.textButton.alpha = 0;
+            
+        }];
+        
+        [UIView animateWithDuration:0.1 delay:0.35 options:UIViewAnimationOptionTransitionNone animations:^{
+            
+        } completion:^(BOOL finished) {
+            _tagPopView.hidden = YES;
+        }];
+    }
+}
+
+- (void)didTextTagViewClicked
+{
+    [self dismissTagPopView];
+    self.isShowTagPoint = YES;
+    self.pointIV.hidden = YES;
+    if (_delegate!=nil && [_delegate respondsToSelector:@selector(didTextTagViewClickedType:)]) {
+        [_delegate didTextTagViewClickedType:[NSNumber numberWithInt:0]];
+    }
+}
+
+- (void)didPeopleTagViewClicked
+{
+    [self dismissTagPopView];
+    self.isShowTagPoint = YES;
+    self.pointIV.hidden = YES;
+    if (_delegate!=nil && [_delegate respondsToSelector:@selector(didPeopleTagViewClickedType:)]) {
+        [_delegate didPeopleTagViewClickedType:[NSNumber numberWithInt:1]];
+    }
+}
+
+- (void)tapTagPopView
+{
+    [self dismissTagPopView];
+    self.isShowTagPoint = YES;
+    self.pointIV.hidden = YES;
+}
+
+#pragma mark - setter、getter
 - (UIImageView *)pointIV
 {
-    
     if (!_pointIV) {
         _pointIV = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"KK_Filter_hover"]];
         _pointIV.frame= CGRectMake(0, 0, TAG_POINT_IMAGEVIEW_W_H, TAG_POINT_IMAGEVIEW_W_H);
@@ -442,5 +548,39 @@
     return _pointIV;
 }
 
+- (void)setBackImage:(UIImage *)backImage
+{
+    _backImage = backImage;
+    
+    CGFloat TagViewAspectRatio = self.superFrame.size.width/self.superFrame.size.height;
+    CGFloat ImageAspectRatio = backImage.size.width/backImage.size.height;
+    CGFloat kWidth = self.superFrame.size.width;
+    CGRect frame = self.superFrame;
+    if (ImageAspectRatio == TagViewAspectRatio) {
+        
+        frame.size.width = kWidth;
+        frame.size.height = kWidth/ImageAspectRatio;
+        _popViewPoint = frame.origin;
+        
+    }else if (ImageAspectRatio > TagViewAspectRatio){
+
+        frame.origin.y += (kWidth/TagViewAspectRatio - kWidth/ImageAspectRatio)/2;
+        frame.size.width = kWidth;
+        frame.size.height = kWidth/ImageAspectRatio;
+        
+        _popViewPoint.x = frame.origin.x;
+        _popViewPoint.y = -frame.origin.y;
+    }else{
+        frame.origin.x += (kWidth-(kWidth/TagViewAspectRatio*ImageAspectRatio))/2;
+        frame.size.height = kWidth/TagViewAspectRatio;
+        frame.size.width = kWidth/TagViewAspectRatio*ImageAspectRatio;
+        
+        _popViewPoint.x = -frame.origin.x;
+        _popViewPoint.y = frame.origin.y;
+    }
+    [self setFrame:frame];
+    [self commonInitialize];
+    self.backgroundImageView.image = backImage;
+}
 @end
 

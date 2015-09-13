@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TXWTextTagModel.h"
+
 
 /*
  1.20汉字40字符
@@ -39,6 +39,12 @@ typedef NS_ENUM(NSInteger, TXWTagViewCellDirection) {
 @property (assign, nonatomic, readonly) CGFloat tagHeight;
 @property (assign, nonatomic) TXWTagViewCellDirection tagViewCellDirection;
 @property (assign, nonatomic) NSInteger containerCountIndex;// 计数
+// alvin 20150913 解放 model
+@property (nonatomic ,strong) NSString *tagText;
+@property (nonatomic ,strong) NSNumber *tagType;
+@property (nonatomic ,strong) NSString *dataKey;
+@property (nonatomic ,strong) NSString *tagId;
+
 
 
 /**
@@ -87,6 +93,11 @@ typedef NS_ENUM(NSInteger, TXWTagViewCellDirection) {
 - (void)tagViewCellsWillHideInTagView:(TXWTagView *)tagView;
 - (void)tagViewCellsDidHideInTagView:(TXWTagView *)tagView;
 
+- (void)didTextTagViewClickedType:(NSNumber *)tagType;
+- (void)didLocationTagViewClickedType:(NSNumber *)tagType;
+- (void)didPeopleTagViewClickedType:(NSNumber *)tagType;
+- (void)tapTagPopView;
+
 @end
 
 #pragma mark - TXWTagView
@@ -101,6 +112,7 @@ typedef NS_ENUM(NSInteger, TXWTagViewCellDirection) {
 @property (assign,nonatomic) CGPoint tagPoint;// tag位置
 @property (weak, nonatomic)  id<TXWTagViewDataSource> dataSource;
 @property (weak, nonatomic)  id<TXWTagViewDelegate> delegate;
+@property (nonatomic, strong) UIImage *backImage;// setter 方法，设置frame
 
 /**
  *  编辑模式，不允许打tag的区域，这里只是表示tagViewItem的锚点不能进入的区域，并不表示整个tagViewCell不能进入的区域。默认为CGRectZero.

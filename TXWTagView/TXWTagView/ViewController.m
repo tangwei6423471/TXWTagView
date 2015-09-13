@@ -8,7 +8,6 @@
 
 #import "ViewController.h"
 #import "TXWTagPopView.h"
-#import "TXWTextTagModel.h"
 #import "TXWTagView.h"
 
 #define BUTTON_HEIGHT 60

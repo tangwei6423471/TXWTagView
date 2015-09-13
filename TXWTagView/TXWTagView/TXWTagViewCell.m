@@ -50,6 +50,10 @@
 @synthesize centerPointPercentage = _centerPointPercentage;
 @synthesize containerCountIndex = _containerCountIndex;
 @synthesize tagViewCellDirection = _tagViewCellDirection;
+@synthesize tagId = _tagId;
+@synthesize tagText = _tagText;
+@synthesize tagType = _tagType;
+@synthesize dataKey = _dataKey;
 
 - (instancetype)init
 {
@@ -88,7 +92,7 @@
 {
     if (CGSizeEqualToSize(_cachedTagSize, CGSizeZero)) {
 
-        _cachedTagSize = CGSizeMake([self widthByStr:self.tagModel.text]+TAG_ARROW_WIDTH+TAGBG_LABEL_PAD+TAG_TYPE_WIDTH+TAGTYPEICON_TAGBGIV_PADDING, TAG_BG_HEIGHT);
+        _cachedTagSize = CGSizeMake([self widthByStr:self.tagText]+TAG_ARROW_WIDTH+TAGBG_LABEL_PAD+TAG_TYPE_WIDTH+TAGTYPEICON_TAGBGIV_PADDING, TAG_BG_HEIGHT);
     }
     return _cachedTagSize;
 }
@@ -154,10 +158,10 @@
     self.frame = CGRectMake(0, 0, self.tagWidth, self.tagHeight);
     // 把传过来的点转换计算成center点
     CGPoint exactPoint;
-    if (self.tagModel.direction == TXWTagViewCellDirectionLeft) {
-        exactPoint = CGPointMake(self.tagModel.posX * size.width-self.tagWidth/2+TAG_TYPE_WIDTH/2, self.tagModel.posY * size.height);
+    if (self.tagViewCellDirection == TXWTagViewCellDirectionLeft) {
+        exactPoint = CGPointMake(self.centerPointPercentage.x * size.width-self.tagWidth/2+TAG_TYPE_WIDTH/2, self.centerPointPercentage.y * size.height);
     }else{
-        exactPoint = CGPointMake(self.tagModel.posX * size.width+self.tagWidth/2-TAG_TYPE_WIDTH/2, self.tagModel.posY * size.height);
+        exactPoint = CGPointMake(self.centerPointPercentage.x * size.width+self.tagWidth/2-TAG_TYPE_WIDTH/2, self.centerPointPercentage.y * size.height);
     }
     
     //左边标签超出边界
@@ -188,7 +192,7 @@
     CGPoint currentCenter = self.center;
     CGFloat offsetLength = self.tagWidth - TAG_TYPE_WIDTH;// 类型图片宽度
     CGPoint newCenter = currentCenter;
-    if (self.tagModel.direction == TXWTagViewCellDirectionLeft) {
+    if (self.tagViewCellDirection == TXWTagViewCellDirectionLeft) {
         self.tagViewCellDirection = TXWTagViewCellDirectionRight;
         newCenter.x += offsetLength;
     } else {
@@ -208,7 +212,7 @@
 // 是否可以改变方向
 - (BOOL)checkCanReversetagViewCellDirectionWithContainerSize:(CGSize)size
 {
-    if (self.tagModel.direction == TXWTagViewCellDirectionRight) {
+    if (self.tagViewCellDirection == TXWTagViewCellDirectionRight) {
         if (self.frame.origin.x < self.tagWidth-TAG_TYPE_WIDTH) {
             return NO;
         }
@@ -223,7 +227,7 @@
 
 - (void)runAnimation
 {
-    switch (self.tagModel.tagType) {
+    switch ([self.tagType intValue]) {
         case 0:
             self.tagTypeIV.image = [UIImage imageNamed:[TXWTagViewHelper tagIconImageNameTypeNomal]];
             break;
@@ -276,7 +280,7 @@
     [self.pulsingGroup1 setValue:@"pulse1" forKey:@"animationName"];
     
     CALayer *imageLayer = [CALayer layer];
-    if (self.tagModel.direction == TXWTagViewCellDirectionRight) {
+    if (self.tagViewCellDirection == TXWTagViewCellDirectionRight) {
         imageLayer.frame = CGRectMake(0, (self.frame.size.height - TAG_TYPE_WIDTH) / 2, TAG_TYPE_WIDTH , TAG_TYPE_WIDTH);
     }else{
         imageLayer.frame = CGRectMake((self.frame.size.width - TAG_TYPE_WIDTH), (self.frame.size.height - TAG_TYPE_WIDTH) / 2, TAG_TYPE_WIDTH , TAG_TYPE_WIDTH);
@@ -293,7 +297,7 @@
 {
     CALayer *pulsingLayer = [CALayer layer];
     pulsingLayer.bounds = CGRectMake(0, 0, self.frame.size.height, self.frame.size.height);
-    if (self.tagModel.direction == TXWTagViewCellDirectionLeft) {
+    if (self.tagViewCellDirection == TXWTagViewCellDirectionLeft) {
         pulsingLayer.position = CGPointMake(self.frame.size.width-TAG_TYPE_WIDTH/2, self.bounds.size.height/2);
     }else {
         pulsingLayer.position = CGPointMake(TAG_TYPE_WIDTH/2, self.bounds.size.height/2);
@@ -362,12 +366,12 @@
 {
     [super layoutSubviews];
 
-    self.tagLabel.text = self.tagModel.text;
+    self.tagLabel.text = self.tagText;
     CGRect TagBgImageViewframe = self.tagIV.frame;
     CGRect TagTypeImageViewframe = self.tagTypeIV.frame;
     CGRect TagLabelframe = self.tagLabel.frame;
     
-    if (self.tagModel.direction == TXWTagViewCellDirectionLeft) {
+    if (self.tagViewCellDirection == TXWTagViewCellDirectionLeft) {
 
         TagBgImageViewframe = CGRectMake(0, 0, self.tagWidth-TAG_TYPE_WIDTH-TAGTYPEICON_TAGBGIV_PADDING, TAG_BG_HEIGHT);
         TagLabelframe.origin.x = TAGLABEL_LEFT_X;

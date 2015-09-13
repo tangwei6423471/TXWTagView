@@ -9,6 +9,7 @@
 #import "TXWShowPicViewController.h"
 #import "TXWTagView.h"
 #import "TXWTagViewCell.h"
+#import "TXWTextTagModel.h"
 
 @interface TXWShowPicViewController ()<TXWTagViewDataSource,TXWTagViewDelegate>
 @property (strong,nonatomic) TXWTagView *tagView;
@@ -19,7 +20,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"标签";
-    self.tagView.backgroundImageView.image = self.bgImage;
+    _tagView = [[TXWTagView alloc]initWithFrame:self.view.frame];
+    _tagView.dataSource = self;
+    _tagView.delegate = self;
+    _tagView.viewMode = TXWTagViewModePreview;
+    self.tagView.backImage = self.bgImage;
     self.tagView.userInteractionEnabled = YES;
     [self.view addSubview:self.tagView];
     [self.tagView reloadData];
@@ -45,8 +50,8 @@
     TXWTextTagModel *tag = self.tags[index];
     
     TXWTagViewCell *tagViewCell = [[TXWTagViewCell alloc] init];
-    tagViewCell.tagModel = tag;
-    tagViewCell.tagViewFrame = self.tagView.frame;
+    tagViewCell.tagText = tag.text;
+    tagViewCell.tagType = [NSNumber numberWithInt:tag.tagType];
     tagViewCell.tagViewCellDirection = tag.direction;
     tagViewCell.centerPointPercentage = CGPointMake(tag.posX, tag.posY);
     return tagViewCell;
@@ -84,15 +89,6 @@
 }
 
 #pragma mark - setter
-- (TXWTagView *)tagView
-{
-    if (!_tagView) {
-        _tagView = [[TXWTagView alloc] initWithImageFrame:CGRectMake(0, 0, _bgImage.size.width, _bgImage.size.height) offsexY:64.0];
-        _tagView.dataSource = self;
-        _tagView.delegate = self;
-        _tagView.viewMode = TXWTagViewModePreview;
-    }
-    return _tagView;
-}
+
 
 @end
