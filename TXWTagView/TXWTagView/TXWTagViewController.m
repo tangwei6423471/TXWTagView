@@ -11,10 +11,11 @@
 #import "TXWTagViewCell.h"
 #import "TXWShowPicViewController.h"
 #import "TXWTextTagModel.h"
+#import "TXWTagTextViewController.h"
 
 #define MAX_TAG_COUNT 5
 
-@interface TXWTagViewController ()<TXWTagViewDataSource,TXWTagViewDelegate,UIGestureRecognizerDelegate>
+@interface TXWTagViewController ()<TXWTagViewDataSource,TXWTagViewDelegate>
 
 @property (strong,nonatomic) UIAlertView *alertView;// debug 弹框输入标签
 @property (strong,nonatomic) NSMutableArray *tagArrs;// 存储标签model
@@ -70,9 +71,27 @@
     if (self.tagArrs.count>=MAX_TAG_COUNT) {
         [[[UIAlertView alloc]initWithTitle:nil message:[NSString stringWithFormat:@"最多可添加%d条标签",MAX_TAG_COUNT] delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil] show];
     }else{
-        [self.alertView show];
+        self.tagType = tagType;
+        TXWTagTextViewController *vc = [[TXWTagTextViewController alloc]init];
+        vc.callback = ^(NSString *tagText){
+            TXWTextTagModel *tagModel = [TXWTextTagModel new];
+            tagModel.text = tagText;
+            tagModel.posX = self.tagView.tagPoint.x/self.tagView.frame.size.width;
+            tagModel.posY = self.tagView.tagPoint.y/self.tagView.frame.size.height;
+            tagModel.tagType = [_tagType integerValue];
+            if (tagModel.posX>0.5) {
+                tagModel.direction = 0;
+            }else{
+                tagModel.direction = 1;
+            }
+            
+            [self.tagArrs addObject:tagModel];
+            [self.tagView reloadData];
+            [self.tagView makeTagItemsAnimated];
+        };
+        vc.isPeopleTagType = NO;
+        [self.navigationController pushViewController:vc animated:YES];
     }
-    self.tagType = tagType;
 
 }
 
@@ -81,10 +100,29 @@
     if (self.tagArrs.count>=MAX_TAG_COUNT) {
         [[[UIAlertView alloc]initWithTitle:nil message:[NSString stringWithFormat:@"最多可添加%d条标签",MAX_TAG_COUNT] delegate:self cancelButtonTitle:nil otherButtonTitles:@"确定", nil] show];
     }else{
-        [self.alertView show];
-    }
-    self.tagType = tagType;
+        self.tagType = tagType;
+        TXWTagTextViewController *vc = [[TXWTagTextViewController alloc]init];
+        vc.callback = ^(NSString *tagText){
+            TXWTextTagModel *tagModel = [TXWTextTagModel new];
+            tagModel.text = tagText;
+            tagModel.posX = self.tagView.tagPoint.x/self.tagView.frame.size.width;
+            tagModel.posY = self.tagView.tagPoint.y/self.tagView.frame.size.height;
+            tagModel.tagType = [_tagType integerValue];
+            if (tagModel.posX>0.5) {
+                tagModel.direction = 0;
+            }else{
+                tagModel.direction = 1;
+            }
+            
+            [self.tagArrs addObject:tagModel];
+            [self.tagView reloadData];
+            [self.tagView makeTagItemsAnimated];
+        };
 
+        vc.isPeopleTagType = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    
 }
 
 #pragma mark - UIAlertViewDelegate
@@ -188,19 +226,19 @@
         [alert show];
         return;
     }
-//    if (self.tagView.isShowTagPoint) {
-//        [self showTagPopView];
-//        self.tagView.pointIV.hidden = NO;
-//    }else{
-//        [self dismissTagPopView];
-//        self.tagView.pointIV.hidden = YES;
-//    }
+    //    if (self.tagView.isShowTagPoint) {
+    //        [self showTagPopView];
+    //        self.tagView.pointIV.hidden = NO;
+    //    }else{
+    //        [self dismissTagPopView];
+    //        self.tagView.pointIV.hidden = YES;
+    //    }
+    
+    //    self.selectedPoint = ponit;
+    //    [self performSegueWithIdentifier:@"showInputTitleVC" sender:self];
 
-//    self.selectedPoint = ponit;
-//    [self performSegueWithIdentifier:@"showInputTitleVC" sender:self];
+
 }
-
-
 
 #pragma mark - setter
 

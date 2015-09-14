@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		23F13BB91BA66C7D00895E3D /* TXWTagTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23F13BB81BA66C7D00895E3D /* TXWTagTextViewController.m */; };
+		23F13BBC1BA66CB100895E3D /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23F13BBB1BA66CB100895E3D /* BaseViewController.m */; };
 		61A1519A1BA4D98F00721314 /* TXWTextTagModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 61A151991BA4D98F00721314 /* TXWTextTagModel.m */; };
 		BA0CE91B1B8C379C00E67777 /* TXWTagView.m in Sources */ = {isa = PBXBuildFile; fileRef = BA0CE91A1B8C379C00E67777 /* TXWTagView.m */; };
 		BA0CE91E1B8C380000E67777 /* TXWTagPopView.m in Sources */ = {isa = PBXBuildFile; fileRef = BA0CE91D1B8C380000E67777 /* TXWTagPopView.m */; };
@@ -35,6 +37,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		23F13BB71BA66C7D00895E3D /* TXWTagTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TXWTagTextViewController.h; sourceTree = "<group>"; };
+		23F13BB81BA66C7D00895E3D /* TXWTagTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TXWTagTextViewController.m; sourceTree = "<group>"; };
+		23F13BBA1BA66CB100895E3D /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
+		23F13BBB1BA66CB100895E3D /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
 		61A151981BA4D98F00721314 /* TXWTextTagModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TXWTextTagModel.h; sourceTree = "<group>"; };
 		61A151991BA4D98F00721314 /* TXWTextTagModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TXWTextTagModel.m; sourceTree = "<group>"; };
 		BA0CE9191B8C379C00E67777 /* TXWTagView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TXWTagView.h; sourceTree = "<group>"; };
@@ -115,6 +121,8 @@
 				BA4E735B1B9402E100E54F62 /* TXWShowPicViewController.h */,
 				BA4E735C1B9402E100E54F62 /* TXWShowPicViewController.m */,
 				BA3AE49A1B8B0227007BAD59 /* Main.storyboard */,
+				23F13BBA1BA66CB100895E3D /* BaseViewController.h */,
+				23F13BBB1BA66CB100895E3D /* BaseViewController.m */,
 				BAEB4E301B8D9DF9007F7EAE /* TXWTag */,
 				BA3AE49D1B8B0227007BAD59 /* Images.xcassets */,
 				BA3AE49F1B8B0227007BAD59 /* LaunchScreen.xib */,
@@ -170,6 +178,8 @@
 				BAEB4E321B8DA733007F7EAE /* TXWTagViewCell.m */,
 				BA0CE91C1B8C380000E67777 /* TXWTagPopView.h */,
 				BA0CE91D1B8C380000E67777 /* TXWTagPopView.m */,
+				23F13BB71BA66C7D00895E3D /* TXWTagTextViewController.h */,
+				23F13BB81BA66C7D00895E3D /* TXWTagTextViewController.m */,
 			);
 			name = TXWTag;
 			sourceTree = "<group>";
@@ -275,6 +285,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BA0CE91B1B8C379C00E67777 /* TXWTagView.m in Sources */,
+				23F13BBC1BA66CB100895E3D /* BaseViewController.m in Sources */,
 				61A1519A1BA4D98F00721314 /* TXWTextTagModel.m in Sources */,
 				BA0CE91E1B8C380000E67777 /* TXWTagPopView.m in Sources */,
 				BA3AE4991B8B0227007BAD59 /* ViewController.m in Sources */,
@@ -284,6 +295,7 @@
 				BAEB4E391B8DAEE7007F7EAE /* TXWTagViewController.m in Sources */,
 				BA3AE4931B8B0227007BAD59 /* main.m in Sources */,
 				BAEB4E331B8DA733007F7EAE /* TXWTagViewCell.m in Sources */,
+				23F13BB91BA66C7D00895E3D /* TXWTagTextViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

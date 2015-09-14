@@ -499,14 +499,14 @@
             frame.origin.y = _popViewPoint.y;
             _tagPopView.textButton.frame = frame;
             _tagPopView.textButton.alpha = 0;
-            
-        }];
-        
-        [UIView animateWithDuration:0.1 delay:0.35 options:UIViewAnimationOptionTransitionNone animations:^{
-            
-        } completion:^(BOOL finished) {
             _tagPopView.hidden = YES;
         }];
+        
+//        [UIView animateWithDuration:0.1 delay:0.35 options:UIViewAnimationOptionTransitionNone animations:^{
+//            
+//        } completion:^(BOOL finished) {
+//            _tagPopView.hidden = YES;
+//        }];
     }
 }
 
