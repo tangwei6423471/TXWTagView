@@ -43,7 +43,7 @@
     self.superFrame = superFrame;
     self = [super initWithFrame:superFrame];
     if (self) {
-        [self commonInitialize];
+//        [self commonInitialize];
     }
     return self;
 }
@@ -76,6 +76,43 @@
 //        [self commonInitialize];
     }
     return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame Image:(UIImage *)image
+{
+    CGRect frameNew = CGRectMake(0, 0, frame.size.width, frame.size.height);
+    self = [super initWithFrame:frameNew];
+    if (self) {
+        
+        CGFloat ImageAspectRatio = image.size.width/image.size.height;
+        CGFloat TagViewAspectRatio = frame.size.width/frame.size.height;
+        CGFloat Width = frame.size.width;
+        //        CGFloat Height = frame.size.height;
+        if (ImageAspectRatio == TagViewAspectRatio) {
+            frameNew.origin.x = frameNew.origin.x;
+            frameNew.origin.y = frameNew.origin.y;
+            frameNew.size.width = Width;
+            frameNew.size.height = Width/ImageAspectRatio;
+            
+        }else if (ImageAspectRatio > TagViewAspectRatio){
+            frameNew.origin.x = frameNew.origin.x;
+            frameNew.origin.y += (Width/TagViewAspectRatio - Width/ImageAspectRatio)/2;
+            frameNew.size.width = Width;
+            frameNew.size.height = Width/ImageAspectRatio;
+        }else{
+            frameNew.origin.x += (Width-(Width/TagViewAspectRatio*ImageAspectRatio))/2;
+            frameNew.origin.y = frameNew.origin.y;
+            frameNew.size.height = Width/TagViewAspectRatio;
+            frameNew.size.width = Width/TagViewAspectRatio*ImageAspectRatio;
+        }
+        self.frame = frameNew;
+        
+        [self commonInitialize];
+        
+        self.backgroundImageView.image = image;
+    }
+    return self;
+    
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
@@ -451,7 +488,6 @@
         frame.size = self.superFrame.size;
         frame.origin = _popViewPoint;
         _tagPopView = [[TXWTagPopView alloc]initWithFrame:frame superView:self];
-        _tagPopView.center = self.center;
         
         CGRect locationButtonFrame = _tagPopView.locationButton.frame;
         locationButtonFrame.origin.y = _popViewPoint.y;
@@ -467,7 +503,7 @@
     _tagPopView.locationButton.alpha = 0;
     [UIView animateWithDuration:0.25f animations:^{
         CGRect locationButtonFrame = _tagPopView.locationButton.frame;
-        locationButtonFrame.origin.y = (self.frame.size.height-BUTTON_WIDTH)/2;
+        locationButtonFrame.origin.y = (self.superFrame.size.height-BUTTON_WIDTH)/2;
         _tagPopView.locationButton.frame = locationButtonFrame;
         _tagPopView.locationButton.alpha = 1;
     }];
@@ -475,7 +511,7 @@
     _tagPopView.textButton.alpha = 0;
     [UIView animateWithDuration:0.10f animations:^{
         CGRect textButtonFrame = _tagPopView.textButton.frame;
-        textButtonFrame.origin.y = (self.frame.size.height-BUTTON_WIDTH)/2;
+        textButtonFrame.origin.y = (self.superFrame.size.height-BUTTON_WIDTH)/2;
         _tagPopView.textButton.frame = textButtonFrame;
         _tagPopView.textButton.alpha = 1;
     }];

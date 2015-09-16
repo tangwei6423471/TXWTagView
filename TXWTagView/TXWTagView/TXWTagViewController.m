@@ -30,7 +30,10 @@
     [super viewDidLoad];
     self.title = @"标签";
     UIImage *image = [UIImage imageNamed:@"demo"];
-
+//    CGRect frame = CGRectMake(30, 50, 300-30, 300);
+//    UIView *view = [[UIView alloc]initWithFrame:self.view.frame];
+//    view.backgroundColor = [UIColor grayColor];
+//    [self.view addSubview:view];
     _tagView = [[TXWTagView alloc]initWithFrame:self.view.frame];
     _tagView.dataSource = self;
     _tagView.delegate = self;
@@ -175,7 +178,7 @@
     tagViewCell.tagText = tag.text;
     tagViewCell.tagType = [NSNumber numberWithInt:tag.tagType];
 
-//    tagViewCell.tagViewFrame = self.tagView.frame;
+    tagViewCell.tagViewFrame = self.tagView.frame;
     tagViewCell.tagViewCellDirection = tag.direction;
     tagViewCell.centerPointPercentage = CGPointMake(tag.posX, tag.posY);
     return tagViewCell;

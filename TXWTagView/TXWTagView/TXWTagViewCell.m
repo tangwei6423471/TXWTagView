@@ -92,7 +92,11 @@
 {
     if (CGSizeEqualToSize(_cachedTagSize, CGSizeZero)) {
 
-        _cachedTagSize = CGSizeMake([self widthByStr:self.tagText]+TAG_ARROW_WIDTH+TAGBG_LABEL_PAD+TAG_TYPE_WIDTH+TAGTYPEICON_TAGBGIV_PADDING, TAG_BG_HEIGHT);
+        CGFloat widthTagFrame = [self widthByStr:self.tagText]+TAG_ARROW_WIDTH+TAGBG_LABEL_PAD+TAG_TYPE_WIDTH+TAGTYPEICON_TAGBGIV_PADDING;
+        if (widthTagFrame>_tagViewFrame.size.width) {
+            widthTagFrame = _tagViewFrame.size.width;
+        }
+        _cachedTagSize = CGSizeMake(widthTagFrame, TAG_BG_HEIGHT);
     }
     return _cachedTagSize;
 }

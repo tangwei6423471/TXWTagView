@@ -121,7 +121,7 @@ typedef NS_ENUM(NSInteger, TXWTagViewCellDirection) {
 
 - (instancetype)initWithFrame:(CGRect)frame;
 - (instancetype)initWithImageFrame:(CGRect)frame offsexY:(CGFloat)offsetY;
-
+- (instancetype)initWithFrame:(CGRect)frame Image:(UIImage *)image;
 // 会废弃以前的tagViewCell,从dataSouse重新获取
 - (void)reloadData;
 
