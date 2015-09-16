@@ -66,8 +66,9 @@
 
 - (void)localTagDataSource
 {
-    NSArray *arr = @[@"若尔盖",@"成都",@"教导村",@"来一伙",@"大米先生",@"黄焖鸡腿",@"吃啥子",@"天气好",@"走起"];
-    self.tagNameArr = [NSMutableArray arrayWithArray:arr];
+    NSUserDefaults *saveDefaults = [NSUserDefaults standardUserDefaults];
+    NSMutableArray *arraySaveData=[NSMutableArray arrayWithArray:[saveDefaults objectForKey:@"tagDataSource"]];
+    self.tagNameArr = arraySaveData;
     self.dataSource = _tagNameArr;
     [self.tableView reloadData];
 }
@@ -94,7 +95,9 @@
 - (void)cleanTagDataSource
 {
     [self.tagNameArr removeAllObjects];
-    self.dataSource = self.tagNameArr;
+    NSUserDefaults *saveDefaults = [NSUserDefaults standardUserDefaults];
+    [saveDefaults setObject:self.tagNameArr forKey:@"tagDataSource"];
+    [saveDefaults synchronize];
     [self.tableView reloadData];
 }
 
@@ -141,11 +144,14 @@
 
     if (_isShowAddCell && indexPath.row==0) {
         // 本地缓存
-
+        NSUserDefaults *saveDefaults = [NSUserDefaults standardUserDefaults];
+        [self.tagNameArr addObject:tagText];
+        [saveDefaults setObject:self.tagNameArr forKey:@"tagDataSource"];
+        [saveDefaults synchronize];
     }
-#warning 回调传值
-    _callback(tagText);
+    
     [self.navigationController popViewControllerAnimated:YES];
+    _callback(tagText);
 }
 
 
@@ -191,6 +197,13 @@
 // called when text changes (including clear)
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
+    if (_searchBar.text.length > MAX_TAGTEXT_LENGTH) {
+        NSString *str = [NSString stringWithFormat: @"标签长度不能超过%d个字",MAX_TAGTEXT_LENGTH];
+        UIAlertView *av = [[UIAlertView alloc]initWithTitle:@"提示" message:str delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+        [av show];
+        return;
+    }
+    
     BOOL isContains = NO;
     // 搜索
 

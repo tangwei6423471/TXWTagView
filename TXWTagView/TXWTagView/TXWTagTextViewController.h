@@ -8,6 +8,8 @@
 
 #import "BaseViewController.h"
 
+#define MAX_TAGTEXT_LENGTH 18
+
 @interface TXWTagTextViewController : BaseViewController
 @property (nonatomic, assign) BOOL isPeopleTagType;
 @property (nonatomic ,strong) void (^callback)(NSString *tagText);
