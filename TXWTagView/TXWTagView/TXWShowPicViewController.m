@@ -20,11 +20,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"标签";
+    self.navigationController.navigationBar.translucent = YES;
     _tagView = [[TXWTagView alloc]initWithFrame:self.view.frame];
     _tagView.dataSource = self;
     _tagView.delegate = self;
     _tagView.viewMode = TXWTagViewModePreview;
     self.tagView.backImage = self.bgImage;
+    self.view.backgroundColor = [UIColor whiteColor];
     self.tagView.userInteractionEnabled = YES;
     [self.view addSubview:self.tagView];
     [self.tagView reloadData];
@@ -53,6 +55,7 @@
     tagViewCell.tagText = tag.text;
     tagViewCell.tagType = [NSNumber numberWithInt:tag.tagType];
     tagViewCell.tagViewCellDirection = tag.direction;
+    tagViewCell.tagViewFrame = self.tagView.frame;
     tagViewCell.centerPointPercentage = CGPointMake(tag.posX, tag.posY);
     return tagViewCell;
 }

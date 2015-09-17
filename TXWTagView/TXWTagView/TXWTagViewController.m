@@ -28,18 +28,19 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.navigationController.navigationBar.translucent = YES;
     self.title = @"标签";
     UIImage *image = [UIImage imageNamed:@"demo"];
-//    CGRect frame = CGRectMake(30, 50, 300-30, 300);
-//    UIView *view = [[UIView alloc]initWithFrame:self.view.frame];
-//    view.backgroundColor = [UIColor grayColor];
-//    [self.view addSubview:view];
-    _tagView = [[TXWTagView alloc]initWithFrame:self.view.frame];
+    CGRect frame = self.view.frame;
+    UIView *view = [[UIView alloc]initWithFrame:frame];
+    view.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:view];
+    _tagView = [[TXWTagView alloc]initWithFrame:frame];
     _tagView.dataSource = self;
     _tagView.delegate = self;
     self.tagView.backImage = image;
     self.tagView.userInteractionEnabled = YES;
-    [self.view addSubview:_tagView];
+    [view addSubview:_tagView];
     [self initUIBarButtonItem];
     
 }
@@ -63,6 +64,8 @@
     showVc.tags = self.tagArrs;
     showVc.bgImage = [UIImage imageNamed:@"demo"];
     NSLog(@"showVc.tagArrs = %d",showVc.tags.count);
+//    UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:showVc];
+//    [self presentViewController:nav animated:YES completion:nil];
     [self.navigationController pushViewController:showVc animated:YES];
 
 }

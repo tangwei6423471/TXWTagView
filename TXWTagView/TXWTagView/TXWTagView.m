@@ -32,6 +32,10 @@
 @property (nonatomic, assign) CGRect superFrame;// 保存父frame
 @property (nonatomic, assign) CGPoint popViewPoint;//popView的point
 @property (strong,nonatomic) TXWTagPopView *tagPopView;
+
+@property (nonatomic ,strong) UIView *tishiView;
+@property (nonatomic ,strong) CALayer *imageLayer;
+@property (nonatomic,strong) CAAnimationGroup *iconGroup;
 @end
 @implementation TXWTagView
 
@@ -413,6 +417,10 @@
     CGPoint point = [touch locationInView:touch.view];
     self.tagPoint = point;
     if(!CGRectContainsPoint(self.bounds, point)){
+        // remove 动画
+        if (touch.view == self.tishiView && _viewMode == TXWTagViewModeEdit) {
+            [self removeAnimal];
+        }
         return; // self.frame bug
     }// 点不在区域内，return
     
@@ -472,7 +480,7 @@
             }
             self.isShowTagPoint = !self.isShowTagPoint;
         }else {
-        
+            NSLog(@"这里");
         }
         
     }
@@ -614,9 +622,106 @@
         _popViewPoint.x = -frame.origin.x;
         _popViewPoint.y = frame.origin.y;
     }
+
     [self setFrame:frame];
     [self commonInitialize];
     self.backgroundImageView.image = backImage;
+    
+    if (_viewMode == TXWTagViewModeEdit) {
+        [self addTagGuideView:YES];
+    }
+    
 }
+
+#pragma mark - 添加标签提示图
+- (void)addTagGuideView:(BOOL)animal
+{
+    CGRect frame;
+    frame.size = self.superFrame.size;
+    frame.origin = _popViewPoint;
+
+    UIView *view = [[UIView alloc]initWithFrame:frame];
+    view.backgroundColor = [UIColor grayColor];
+    view.alpha = 0.9;
+    
+    UIImage *image = [UIImage imageNamed:@"tishi"];
+    UIImageView *imageView = [[UIImageView alloc]initWithImage:image];
+    
+    CGFloat tishiWidth = view.bounds.size.width*0.6;
+    CGRect tishiFrame = CGRectMake(0, 0, tishiWidth, tishiWidth*image.size.height/image.size.width);
+    imageView.frame = tishiFrame;
+    imageView.center = view.center;
+    CGRect layerFrame = imageView.frame;
+    layerFrame.origin.y -= tishiWidth*image.size.height/image.size.width;
+    _tishiView = view;
+    [self insertSubview:_tishiView atIndex:2];
+    
+    if (animal) {
+        // icon 放大缩小
+        CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+        animation.fromValue = @1;
+        animation.toValue = @0.9;
+        animation.duration = 0.15;
+        
+        CABasicAnimation *animation1 = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+        animation1.fromValue = @0.9;
+        animation1.toValue = @1.1;
+        animation1.duration = 0.3;
+        animation1.beginTime = animation.duration;
+        
+        CABasicAnimation *animation2 = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+        animation2.fromValue = @1.1;
+        animation2.toValue = @1;
+        animation2.duration = 0.15;
+        animation2.beginTime = animation.duration + animation1.duration;
+        
+        CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
+        animationGroup.duration = animation.duration + animation1.duration + animation2.duration + 0.1;
+        animationGroup.repeatCount = HUGE_VALF;
+        animationGroup.delegate = self; // 动画开始结束方法
+        animationGroup.animations = @[animation,animation1,animation2];
+        [animationGroup setValue:@"icon" forKey:@"animationName"];
+        self.iconGroup = animationGroup;
+        
+        CALayer *imageLayer = [CALayer layer];
+        imageLayer.frame = layerFrame;
+        NSLog(@"%@",NSStringFromCGRect(layerFrame));
+        imageLayer.contents = (__bridge id)(image.CGImage);
+        [self.layer addSublayer:imageLayer];
+        self.imageLayer = imageLayer;
+        [imageLayer addAnimation:animationGroup forKey:@"icon"];
+    }
+}
+
+- (void)removeAnimal
+{
+    [self.tishiView removeFromSuperview];
+    [self.imageLayer removeAnimationForKey:@"icon"];
+    [self.imageLayer removeFromSuperlayer];
+}
+
+#pragma mark - CAAnimationDelegate
+- (void)animationDidStart:(CAAnimation *)animation
+{
+    
+    NSString *animationName = [animation valueForKey:@"animationName"];
+    if ([animationName  isEqualToString:@"pulse"]) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * 0.9  * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            [self.imageLayer addAnimation:self.iconGroup forKey:@"icon"];
+        });
+    }
+}
+
+- (void)animationDidStop:(CAAnimation *)animation finished:(BOOL)finished
+{
+    if (finished) {
+        NSString *animationName = [animation valueForKey:@"animationName"];
+        
+        if ([animationName isEqualToString:@"icon"]) {
+            [self.imageLayer removeAnimationForKey:@"icon"];
+        }
+    }
+}
+
 @end
 
