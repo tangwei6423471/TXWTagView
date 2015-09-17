@@ -47,97 +47,32 @@
     self.superFrame = superFrame;
     self = [super initWithFrame:superFrame];
     if (self) {
-//        [self commonInitialize];
+        self.userInteractionEnabled = YES;
+        [self setFrame:frame];
     }
     return self;
 }
 
-// 不规则图片
-- (instancetype)initWithImageFrame:(CGRect)frame offsexY:(CGFloat)offsetY
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        
-//        CGFloat ImageAspectRatio = frame.size.width/frame.size.height;
-//        CGRect frame = CGRectMake(0, offsetY, kScreenWidth, kScreenWidth);
-//        if (ImageAspectRatio == kTagViewAspectRatio) {
-//            
-//            frame.size.width = kScreenWidth;
-//            frame.size.height = kScreenWidth/ImageAspectRatio;
-//            
-//        }else if (ImageAspectRatio > kTagViewAspectRatio){
-//            frame.origin.x = 0;
-//            frame.origin.y += (kScreenWidth/kTagViewAspectRatio - kScreenWidth/ImageAspectRatio)/2;
-//            frame.size.width = kScreenWidth;
-//            frame.size.height = kScreenWidth/ImageAspectRatio;
-//        }else{
-//            frame.origin.x += (kScreenWidth-(kScreenWidth/kTagViewAspectRatio*ImageAspectRatio))/2;
-//            frame.size.height = kScreenWidth/kTagViewAspectRatio;
-//            frame.size.width = kScreenWidth/kTagViewAspectRatio*ImageAspectRatio;
-//        }
-//        self.frame = frame;
-//        
-//        [self commonInitialize];
-    }
-    return self;
-}
-
-- (instancetype)initWithFrame:(CGRect)frame Image:(UIImage *)image
-{
-    CGRect frameNew = CGRectMake(0, 0, frame.size.width, frame.size.height);
-    self = [super initWithFrame:frameNew];
-    if (self) {
-        
-        CGFloat ImageAspectRatio = image.size.width/image.size.height;
-        CGFloat TagViewAspectRatio = frame.size.width/frame.size.height;
-        CGFloat Width = frame.size.width;
-        //        CGFloat Height = frame.size.height;
-        if (ImageAspectRatio == TagViewAspectRatio) {
-            frameNew.origin.x = frameNew.origin.x;
-            frameNew.origin.y = frameNew.origin.y;
-            frameNew.size.width = Width;
-            frameNew.size.height = Width/ImageAspectRatio;
-            
-        }else if (ImageAspectRatio > TagViewAspectRatio){
-            frameNew.origin.x = frameNew.origin.x;
-            frameNew.origin.y += (Width/TagViewAspectRatio - Width/ImageAspectRatio)/2;
-            frameNew.size.width = Width;
-            frameNew.size.height = Width/ImageAspectRatio;
-        }else{
-            frameNew.origin.x += (Width-(Width/TagViewAspectRatio*ImageAspectRatio))/2;
-            frameNew.origin.y = frameNew.origin.y;
-            frameNew.size.height = Width/TagViewAspectRatio;
-            frameNew.size.width = Width/TagViewAspectRatio*ImageAspectRatio;
-        }
-        self.frame = frameNew;
-        
-        [self commonInitialize];
-        
-        self.backgroundImageView.image = image;
-    }
-    return self;
-    
-}
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     if (self = [super initWithCoder:aDecoder]) {
-        [self commonInitialize];
+        [self commonInitialize:self.frame];
     }
     return self;
 }
 
-- (void)commonInitialize
+- (void)commonInitialize:(CGRect)frame
 {
     // Initialization code
     self.isShowTagPoint = YES;
-    NSLog(@"tagView.bounds = %@",NSStringFromCGRect(self.bounds));
-    self.backgroundImageView = [[UIImageView alloc] initWithFrame:self.bounds];// 不能用frame
+    NSLog(@"tagView.bounds = %@",NSStringFromCGRect(frame));
+    self.backgroundImageView = [[UIImageView alloc] initWithFrame:frame];// 不能用frame
     self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFit;
     self.backgroundImageView.userInteractionEnabled = YES;
     [self addSubview:self.backgroundImageView];
 
-    self.tagsContainer = [[UIView alloc]initWithFrame:self.bounds];// 不能用frame
+    self.tagsContainer = [[UIView alloc]initWithFrame:frame];// 不能用frame
     self.tagsContainer.translatesAutoresizingMaskIntoConstraints = NO;
     self.clipsToBounds = YES;
     self.tagsContainer.backgroundColor = [UIColor clearColor];
@@ -186,8 +121,8 @@
             //点击事件
             UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tagViewCellTapped:)];
             [tagViewCell addGestureRecognizer:tapGesture];
-            
-            [tagViewCell adjustViewFrameWithGivenPositionPercentage:tagViewCell.centerPointPercentage andContainerSize:self.bounds.size];
+            tagViewCell.tagViewFrame = self.tagsContainer.bounds;
+            [tagViewCell adjustViewFrameWithGivenPositionPercentage:tagViewCell.centerPointPercentage andContainerSize:self.tagsContainer.bounds.size];
             
             //编辑模式独有事件
             if (self.viewMode == TXWTagViewModeEdit) {
@@ -198,9 +133,9 @@
 
                     CGPoint centerPointPercentage;
                     if (tagViewCell.tagViewCellDirection == TXWTagViewCellDirectionLeft) {
-                        centerPointPercentage = CGPointMake((itemPosition.x+tagViewCell.tagWidth/2-TAG_TYPE_WIDTH/2)/self.bounds.size.width, itemPosition.y / self.bounds.size.height);
+                        centerPointPercentage = CGPointMake((itemPosition.x+tagViewCell.tagWidth/2-TAG_TYPE_WIDTH/2)/self.tagsContainer.bounds.size.width, itemPosition.y / self.tagsContainer.bounds.size.height);
                     }else{
-                        centerPointPercentage = CGPointMake((itemPosition.x-tagViewCell.tagWidth/2+TAG_TYPE_WIDTH/2)/self.bounds.size.width, itemPosition.y / self.bounds.size.height);
+                        centerPointPercentage = CGPointMake((itemPosition.x-tagViewCell.tagWidth/2+TAG_TYPE_WIDTH/2)/self.tagsContainer.bounds.size.width, itemPosition.y / self.tagsContainer.bounds.size.height);
                     }
 
                     [self.delegate tagView:self didMovetagViewCell:tagViewCell atIndex:tagViewCell.containerCountIndex toNewPositonPercentage:centerPointPercentage];
@@ -300,9 +235,9 @@
             CGPoint itemPosition = tagViewCell.layer.position; // center
             CGPoint centerPointPercentage;// center转换成鼠标点击的点
             if (tagViewCell.tagViewCellDirection == TXWTagViewCellDirectionLeft) {
-                centerPointPercentage = CGPointMake((itemPosition.x+tagViewCell.tagWidth/2-TAG_TYPE_WIDTH/2)/self.bounds.size.width, itemPosition.y / self.bounds.size.height);
+                centerPointPercentage = CGPointMake((itemPosition.x+tagViewCell.tagWidth/2-TAG_TYPE_WIDTH/2)/self.tagsContainer.bounds.size.width, itemPosition.y / self.tagsContainer.bounds.size.height);
             }else{
-                centerPointPercentage = CGPointMake((itemPosition.x-tagViewCell.tagWidth/2+TAG_TYPE_WIDTH/2)/self.bounds.size.width, itemPosition.y / self.bounds.size.height);
+                centerPointPercentage = CGPointMake((itemPosition.x-tagViewCell.tagWidth/2+TAG_TYPE_WIDTH/2)/self.tagsContainer.bounds.size.width, itemPosition.y / self.tagsContainer.bounds.size.height);
             }
 
             [self.delegate tagView:self didMovetagViewCell:tagViewCell atIndex:tagViewCell.containerCountIndex toNewPositonPercentage:centerPointPercentage];
@@ -334,20 +269,7 @@
     CGFloat tagViewRightWidth = tagViewCell.bounds.size.width - tagViewLeftWidth;
     
     if (tagViewCell.tagViewCellDirection == TXWTagViewCellDirectionLeft) {
-//        centerPoint.x -= tagViewCell.bounds.size.width / 2;
-//        if (centerPoint.x-self.offsetX - tagViewLeftWidth < containerBounds.origin.x || centerPoint.x-self.offsetX + tagViewRightWidth > containerBounds.origin.x + containerBounds.size.width) {
-//            if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-//                if ([tagViewCell checkCanReversetagViewCellDirectionWithContainerSize:self.bounds.size])
-//                {
-//                    [tagViewCell reversetagViewCellDirection];
-//                    if ([self.delegate respondsToSelector:@selector(tagView:tagViewCell:didChangedDirection:AtIndex:)]) {
-//                        [self.delegate tagView:self tagViewCell:tagViewCell didChangedDirection:tagViewCell.tagViewCellDirection AtIndex:tagViewCell.containerCountIndex];
-//                    }
-//                }
-//            }
-//            reportDelegateSavePosition();
-//            return;
-//        }
+
         if (centerPoint.x-self.offsetX + tagViewRightWidth > containerBounds.origin.x + containerBounds.size.width) {
 
             centerPoint.x = containerBounds.origin.x + containerBounds.size.width + self.offsetX - tagViewRightWidth;
@@ -362,20 +284,7 @@
         }
         [tagViewCell setCenter:CGPointMake(centerPoint.x-self.offsetX, centerPoint.y-self.offsetY)];
     } else {
-//        centerPoint.x += tagViewCell.bounds.size.width / 2;// 偏移量一直不对，因为这个
-//        if (centerPoint.x - tagViewLeftWidth < containerBounds.origin.x || centerPoint.x + tagViewRightWidth > containerBounds.origin.x + containerBounds.size.width) {
-//            if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-//                if ([tagViewCell checkCanReversetagViewCellDirectionWithContainerSize:self.bounds.size])
-//                {
-//                    [tagViewCell reversetagViewCellDirection];
-//                    if ([self.delegate respondsToSelector:@selector(tagView:tagViewCell:didChangedDirection:AtIndex:)]) {
-//                        [self.delegate tagView:self tagViewCell:tagViewCell didChangedDirection:tagViewCell.tagViewCellDirection AtIndex:tagViewCell.containerCountIndex];
-//                    }
-//                }
-//            }
-//            reportDelegateSavePosition();
-//            return;
-//        }
+
         if (centerPoint.x - self.offsetX - tagViewLeftWidth < containerBounds.origin.x) {
 
             centerPoint.x = containerBounds.origin.x + tagViewLeftWidth + self.offsetX;
@@ -415,35 +324,37 @@
     NSLog(@"touchesBegan %@ " ,NSStringFromClass([touch.view class]));
     
     CGPoint point = [touch locationInView:touch.view];
-    self.tagPoint = point;
-    if(!CGRectContainsPoint(self.bounds, point)){
+    
+    if (touch.view == self.tishiView){
         // remove 动画
         if (touch.view == self.tishiView && _viewMode == TXWTagViewModeEdit) {
             [self removeAnimal];
         }
-        return; // self.frame bug
-    }// 点不在区域内，return
-    
-    if (touch.view == self.tagsContainer) {
+    }else if (touch.view == self.tagsContainer) {
+        
         if (self.viewMode == TXWTagViewModePreview) {
+            
             [self hideTagItems];
+            
         } else if (self.viewMode == TXWTagViewModeEdit) {
             
             CGPoint position = [touch locationInView:self.tagsContainer];
-            if (CGRectContainsPoint(self.disableTagArea, position)) {
-                return;
-            }
+            
+            self.tagPoint = position;
 
             if ([self.delegate respondsToSelector:@selector(tagView:addNewtagViewCellTappedAtPosition:)]) {
                 
                 [self.delegate tagView:self addNewtagViewCellTappedAtPosition:position];
             }
+            
             if (self.isShowTagPoint) {
+                
                 CGRect frame = self.pointIV.frame;
-                frame.origin = CGPointMake(point.x-TAG_POINT_IMAGEVIEW_W_H/2, point.y-TAG_POINT_IMAGEVIEW_W_H/2);
+                frame.origin = CGPointMake(position.x-TAG_POINT_IMAGEVIEW_W_H/2, position.y-TAG_POINT_IMAGEVIEW_W_H/2);
                 self.pointIV.frame = frame;
                 self.pointIV.hidden = NO;
                 [self showTagPopView];
+                
             }else{
 
                 self.pointIV.hidden = YES;
@@ -460,7 +371,7 @@
         }
         
 
-    }else{
+    }else if (touch.view == self.tagPopView){
         if (self.viewMode == TXWTagViewModeEdit) {
             if ([self.delegate respondsToSelector:@selector(tagView:addNewtagViewCellTappedAtPosition:)]) {
                 CGPoint position = [touch locationInView:self.tagsContainer];
@@ -483,6 +394,8 @@
             NSLog(@"这里");
         }
         
+    }else{
+    
     }
     
 }
@@ -492,17 +405,10 @@
 {
     _tagPopView.hidden = NO;
     if (!_tagPopView) {
-        CGRect frame;
-        frame.size = self.superFrame.size;
-        frame.origin = _popViewPoint;
-        _tagPopView = [[TXWTagPopView alloc]initWithFrame:frame superView:self];
-        
-        CGRect locationButtonFrame = _tagPopView.locationButton.frame;
-        locationButtonFrame.origin.y = _popViewPoint.y;
-        _tagPopView.locationButton.frame = locationButtonFrame;
-        CGRect textButtonFrame = _tagPopView.textButton.frame;
-        textButtonFrame.origin.y = _popViewPoint.y;
-        _tagPopView.textButton.frame = textButtonFrame;
+
+        _tagPopView = [[TXWTagPopView alloc]initWithFrame:self.frame superView:self];
+        _tagPopView.userInteractionEnabled = YES;
+
     }
     _tagPopView.alpha = 1;
     _tagPopView.delegate = self;
@@ -532,7 +438,7 @@
         _tagPopView.locationButton.alpha = 1;
         [UIView animateWithDuration:0.10f animations:^{
             CGRect frame1 = _tagPopView.locationButton.frame;
-            frame1.origin.y = _popViewPoint.y;
+            frame1.origin.y = -frame1.size.width;
             _tagPopView.locationButton.frame = frame1;
             _tagPopView.locationButton.alpha = 0;
         }];
@@ -540,17 +446,12 @@
         _tagPopView.textButton.alpha = 1;
         [UIView animateWithDuration:0.35f animations:^{
             CGRect frame = _tagPopView.textButton.frame;
-            frame.origin.y = _popViewPoint.y;
+            frame.origin.y = -frame.size.width;
             _tagPopView.textButton.frame = frame;
             _tagPopView.textButton.alpha = 0;
             _tagPopView.hidden = YES;
         }];
-        
-//        [UIView animateWithDuration:0.1 delay:0.35 options:UIViewAnimationOptionTransitionNone animations:^{
-//            
-//        } completion:^(BOOL finished) {
-//            _tagPopView.hidden = YES;
-//        }];
+
     }
 }
 
@@ -560,7 +461,7 @@
     self.isShowTagPoint = YES;
     self.pointIV.hidden = YES;
     if (_delegate!=nil && [_delegate respondsToSelector:@selector(didTextTagViewClickedType:)]) {
-        [_delegate didTextTagViewClickedType:[NSNumber numberWithInt:0]];
+        [_delegate didTextTagViewClickedType:[NSNumber numberWithInt:kTagTypeNomal]];
     }
 }
 
@@ -570,7 +471,7 @@
     self.isShowTagPoint = YES;
     self.pointIV.hidden = YES;
     if (_delegate!=nil && [_delegate respondsToSelector:@selector(didPeopleTagViewClickedType:)]) {
-        [_delegate didPeopleTagViewClickedType:[NSNumber numberWithInt:1]];
+        [_delegate didPeopleTagViewClickedType:[NSNumber numberWithInt:kTagTypePeople]];
     }
 }
 
@@ -587,7 +488,7 @@
     if (!_pointIV) {
         _pointIV = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"KK_Filter_hover"]];
         _pointIV.frame= CGRectMake(0, 0, TAG_POINT_IMAGEVIEW_W_H, TAG_POINT_IMAGEVIEW_W_H);
-        [self addSubview:_pointIV];
+        [self.backgroundImageView addSubview:_pointIV];
     }
     return _pointIV;
 }
@@ -623,26 +524,25 @@
         _popViewPoint.y = frame.origin.y;
     }
 
-    [self setFrame:frame];
-    [self commonInitialize];
+    [self commonInitialize:frame];
     self.backgroundImageView.image = backImage;
     
-    if (_viewMode == TXWTagViewModeEdit) {
+}
+
+- (void)setIsShowIndicate:(BOOL)isShowIndicate
+{
+    if ((_viewMode == TXWTagViewModeEdit) && isShowIndicate) {
         [self addTagGuideView:YES];
     }
-    
 }
 
 #pragma mark - 添加标签提示图
 - (void)addTagGuideView:(BOOL)animal
 {
-    CGRect frame;
-    frame.size = self.superFrame.size;
-    frame.origin = _popViewPoint;
 
-    UIView *view = [[UIView alloc]initWithFrame:frame];
+    UIView *view = [[UIView alloc]initWithFrame:self.superFrame];
     view.backgroundColor = [UIColor grayColor];
-    view.alpha = 0.9;
+    view.alpha = 0.6;
     
     UIImage *image = [UIImage imageNamed:@"tishi"];
     UIImageView *imageView = [[UIImageView alloc]initWithImage:image];
@@ -652,7 +552,6 @@
     imageView.frame = tishiFrame;
     imageView.center = view.center;
     CGRect layerFrame = imageView.frame;
-    layerFrame.origin.y -= tishiWidth*image.size.height/image.size.width;
     _tishiView = view;
     [self insertSubview:_tishiView atIndex:2];
     
@@ -698,29 +597,6 @@
     [self.tishiView removeFromSuperview];
     [self.imageLayer removeAnimationForKey:@"icon"];
     [self.imageLayer removeFromSuperlayer];
-}
-
-#pragma mark - CAAnimationDelegate
-- (void)animationDidStart:(CAAnimation *)animation
-{
-    
-    NSString *animationName = [animation valueForKey:@"animationName"];
-    if ([animationName  isEqualToString:@"pulse"]) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * 0.9  * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//            [self.imageLayer addAnimation:self.iconGroup forKey:@"icon"];
-        });
-    }
-}
-
-- (void)animationDidStop:(CAAnimation *)animation finished:(BOOL)finished
-{
-    if (finished) {
-        NSString *animationName = [animation valueForKey:@"animationName"];
-        
-        if ([animationName isEqualToString:@"icon"]) {
-            [self.imageLayer removeAnimationForKey:@"icon"];
-        }
-    }
 }
 
 @end

@@ -82,8 +82,8 @@
         vc.callback = ^(NSString *tagText){
             TXWTextTagModel *tagModel = [TXWTextTagModel new];
             tagModel.text = tagText;
-            tagModel.posX = self.tagView.tagPoint.x/self.tagView.frame.size.width;
-            tagModel.posY = self.tagView.tagPoint.y/self.tagView.frame.size.height;
+            tagModel.posX = self.tagView.tagPoint.x/self.tagView.backgroundImageView.frame.size.width;
+            tagModel.posY = self.tagView.tagPoint.y/self.tagView.backgroundImageView.frame.size.height;
             tagModel.tagType = [_tagType integerValue];
             if (tagModel.posX>0.5) {
                 tagModel.direction = 0;
@@ -111,8 +111,8 @@
         vc.callback = ^(NSString *tagText){
             TXWTextTagModel *tagModel = [TXWTextTagModel new];
             tagModel.text = tagText;
-            tagModel.posX = self.tagView.tagPoint.x/self.tagView.frame.size.width;
-            tagModel.posY = self.tagView.tagPoint.y/self.tagView.frame.size.height;
+            tagModel.posX = self.tagView.tagPoint.x/self.tagView.backgroundImageView.frame.size.width;
+            tagModel.posY = self.tagView.tagPoint.y/self.tagView.backgroundImageView.frame.size.height;
             tagModel.tagType = [_tagType integerValue];
             if (tagModel.posX>0.5) {
                 tagModel.direction = 0;
@@ -138,21 +138,7 @@
         if (0 == buttonIndex) {
             [alertView isHidden];
         }else{
-            UITextField *nameTF = [alertView textFieldAtIndex:0];
-            TXWTextTagModel *tagModel = [TXWTextTagModel new];
-            tagModel.text = [nameTF.text isEqualToString:@""]?@"":nameTF.text;
-            tagModel.posX = self.tagView.tagPoint.x/self.tagView.frame.size.width;
-            tagModel.posY = self.tagView.tagPoint.y/self.tagView.frame.size.height;
-            tagModel.tagType = [_tagType integerValue];
-            if (tagModel.posX>0.5) {
-                tagModel.direction = 0;
-            }else{
-                tagModel.direction = 1;
-            }
-            
-            [self.tagArrs addObject:tagModel];
-            [self.tagView reloadData];
-            [self.tagView makeTagItemsAnimated];
+            // add tags
         }
     }else if (alertView.tag == 1000){
         [alertView isHidden];
@@ -181,7 +167,6 @@
     tagViewCell.tagText = tag.text;
     tagViewCell.tagType = [NSNumber numberWithInt:tag.tagType];
 
-    tagViewCell.tagViewFrame = self.tagView.frame;
     tagViewCell.tagViewCellDirection = tag.direction;
     tagViewCell.centerPointPercentage = CGPointMake(tag.posX, tag.posY);
     return tagViewCell;

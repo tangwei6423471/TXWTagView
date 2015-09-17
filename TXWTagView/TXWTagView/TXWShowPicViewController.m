@@ -55,7 +55,6 @@
     tagViewCell.tagText = tag.text;
     tagViewCell.tagType = [NSNumber numberWithInt:tag.tagType];
     tagViewCell.tagViewCellDirection = tag.direction;
-    tagViewCell.tagViewFrame = self.tagView.frame;
     tagViewCell.centerPointPercentage = CGPointMake(tag.posX, tag.posY);
     return tagViewCell;
 }

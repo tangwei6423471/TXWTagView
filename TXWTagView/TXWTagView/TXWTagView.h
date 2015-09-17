@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-
+// 标签类型
+#define kTagTypeNomal 10
+#define kTagTypePeople 20
+#define kTagTypeLocale 30
 /*
  1.20汉字40字符
  2.最多5个标签
@@ -45,7 +48,8 @@ typedef NS_ENUM(NSInteger, TXWTagViewCellDirection) {
 @property (nonatomic ,strong) NSString *dataKey;
 @property (nonatomic ,strong) NSString *tagId;
 
-
+// alvin 201590171520
+@property (nonatomic,assign) CGRect tagViewFrame;
 
 /**
  *  根据指定的x，y百分比值，以及给定容器的size，计算tag的显示位置，这里设置layer.position即可，这里要保证view的frame已经存在，并且layer.anchorPoint已经被正确设置。PS:方法中应该实现，如果指定的位置放不下tag的处理方案，转向还是移动。
@@ -114,14 +118,14 @@ typedef NS_ENUM(NSInteger, TXWTagViewCellDirection) {
 @property (weak, nonatomic)  id<TXWTagViewDelegate> delegate;
 @property (nonatomic, strong) UIImage *backImage;// setter 方法，设置frame
 
+@property (nonatomic,assign) BOOL isShowIndicate;// 是否显示提示动画
 /**
  *  编辑模式，不允许打tag的区域，这里只是表示tagViewItem的锚点不能进入的区域，并不表示整个tagViewCell不能进入的区域。默认为CGRectZero.
  */
 @property (assign, nonatomic) CGRect disableTagArea;
 
 - (instancetype)initWithFrame:(CGRect)frame;
-- (instancetype)initWithImageFrame:(CGRect)frame offsexY:(CGFloat)offsetY;
-- (instancetype)initWithFrame:(CGRect)frame Image:(UIImage *)image;
+
 // 会废弃以前的tagViewCell,从dataSouse重新获取
 - (void)reloadData;
 

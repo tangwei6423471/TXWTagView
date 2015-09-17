@@ -12,6 +12,5 @@
 
 @interface TXWTagViewCell : UIView<TXWTagViewCellDelegate>
 
-@property (assign,nonatomic) CGRect tagViewFrame;
 - (instancetype)init;
 @end

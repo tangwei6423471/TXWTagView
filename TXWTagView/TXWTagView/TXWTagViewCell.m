@@ -54,6 +54,7 @@
 @synthesize tagText = _tagText;
 @synthesize tagType = _tagType;
 @synthesize dataKey = _dataKey;
+@synthesize tagViewFrame = _tagViewFrame;
 
 - (instancetype)init
 {
